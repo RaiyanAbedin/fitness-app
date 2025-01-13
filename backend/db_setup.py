@@ -23,18 +23,47 @@ def setup_database():
     })
     print("Inserted sample user into 'users' collection.")
 
-    # Create Workouts Collection
-    db.workouts.insert_one({
-        "workout_id": "w001",
-        "name": "Full Body Strength",
-        "duration": 45,
-        "calories_burned": 350,
-        "exercises": [
-            {"name": "Squats", "sets": 3, "reps": 12},
-            {"name": "Deadlift", "sets": 3, "reps": 10}
-        ]
-    })
-    print("Inserted sample workout into 'workouts' collection.")
+    # Insert more detailed sample workouts
+    db.workouts.insert_many([
+        {
+            "workout_id": "w001",
+            "goal": "Gain Weight",
+            "name": "Full Body Strength",
+            "duration": 60,  # in minutes
+            "calories_burned": 500,
+            "exercises": [
+                {"name": "Bench Press", "sets": 4, "reps": 8},
+                {"name": "Deadlift", "sets": 3, "reps": 6},
+                {"name": "Squats", "sets": 4, "reps": 8}
+            ]
+        },
+        {
+            "workout_id": "w002",
+            "goal": "Lose Weight",
+            "name": "HIIT Cardio",
+            "duration": 30,
+            "calories_burned": 400,
+            "exercises": [
+                {"name": "Jumping Jacks", "sets": 3, "reps": 50},
+                {"name": "Burpees", "sets": 3, "reps": 15},
+                {"name": "Mountain Climbers", "sets": 3, "reps": 40}
+            ]
+        },
+        {
+            "workout_id": "w003",
+            "goal": "Maintain Body Fat",
+            "name": "Core and Cardio",
+            "duration": 45,
+            "calories_burned": 300,
+            "exercises": [
+                {"name": "Plank", "sets": 3, "reps": "30 sec"},
+                {"name": "Push-ups", "sets": 3, "reps": 12},
+                {"name": "Jogging", "sets": 1, "reps": "10 min"}
+            ]
+        }
+    ])
+    print("Inserted sample workouts into 'workouts' collection.")
+
 
     # Create Meals Collection
     db.meals.insert_one({

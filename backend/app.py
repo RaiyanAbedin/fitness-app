@@ -117,5 +117,17 @@ def get_tip():
 
 
 
+@app.route('/api/workouts/<goal>', methods=['GET'])
+def get_workouts_by_goal(goal):
+    # Find workouts that match the goal
+    workouts = list(db.workouts.find({"goal": goal}, {"_id": 0}))  # Exclude the MongoDB ID
+    if workouts:
+        return jsonify(workouts), 200
+    else:
+        return jsonify({"error": "No workouts found for this goal"}), 404
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
