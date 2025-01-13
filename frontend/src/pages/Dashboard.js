@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState('');
+    const [tip, setTip] = useState(''); // State for the motivational tip
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,17 +26,26 @@ const Dashboard = () => {
             }
         };
 
+        const fetchTip = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:5000/api/tip');
+                setTip(response.data.tip);
+            } catch (err) {
+                console.error('Failed to fetch the motivational tip.');
+            }
+        };
+
         fetchUserData();
+        fetchTip();
     }, []);
 
     const handleLogout = () => {
-        // Clear localStorage and redirect to login
         localStorage.removeItem('user_id');
         navigate('/login');
     };
 
     const handleEditProfile = () => {
-        navigate('/edit-profile'); // Redirect to the Edit Profile page
+        navigate('/edit-profile');
     };
 
     if (error) {
@@ -47,53 +57,39 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-blue-100 flex flex-col items-center p-4">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6">
+        <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center p-4">
+            <h1 className="text-3xl font-bold mb-6 text-center">
                 Welcome, {userData.name}!
             </h1>
-            <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
-                <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">Your Profile</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* User Info */}
-                    <p className="text-lg">
-                        <span className="font-semibold">Email:</span> {userData.email}
-                    </p>
-                    <p className="text-lg">
-                        <span className="font-semibold">Age:</span> {userData.age}
-                    </p>
-                    <p className="text-lg">
-                        <span className="font-semibold">Height:</span> {userData.height} cm
-                    </p>
-                    <p className="text-lg">
-                        <span className="font-semibold">Weight:</span> {userData.weight} kg
-                    </p>
-                    <p className="text-lg">
-                        <span className="font-semibold">Goals:</span> {userData.goals}
-                    </p>
-                    <p className="text-lg">
-                        <span className="font-semibold">Dietary Preferences:</span>{' '}
-                        {userData.dietary_preferences?.join(', ')}
-                    </p>
-                    <p className="text-lg">
-                        <span className="font-semibold">Gender:</span> {userData.gender}
-                    </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                    {/* Logout Button */}
-                    <button
-                        onClick={handleLogout}
-                        className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 w-full sm:w-auto"
-                    >
-                        Logout
-                    </button>
-                    {/* Edit Profile Button */}
-                    <button
-                        onClick={handleEditProfile}
-                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 w-full sm:w-auto"
-                    >
-                        Edit Profile
-                    </button>
-                </div>
+            <p className="text-lg mb-4">Email: {userData.email}</p>
+            <p className="text-lg mb-4">Age: {userData.age}</p>
+            <p className="text-lg mb-4">Height: {userData.height} cm</p>
+            <p className="text-lg mb-4">Weight: {userData.weight} kg</p>
+            <p className="text-lg mb-4">Goals: {userData.goals}</p>
+            <p className="text-lg mb-4">
+                Dietary Preferences: {userData.dietary_preferences?.join(', ')}
+            </p>
+
+            {/* Motivational Tip Section */}
+            <div className="bg-white shadow-md rounded px-8 py-6 w-full max-w-lg text-center">
+                <h2 className="text-xl font-semibold mb-4">Daily Motivation</h2>
+                <p className="text-blue-500 italic text-lg">{tip || 'Loading tip...'}</p>
+            </div>
+
+            <div className="flex space-x-4 mt-6">
+                <button
+                    onClick={handleEditProfile}
+                    className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"
+                >
+                    Edit Profile
+                </button>
+
+                <button
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
+                >
+                    Logout
+                </button>
             </div>
         </div>
     );
