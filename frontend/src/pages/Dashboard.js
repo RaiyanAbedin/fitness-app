@@ -6,6 +6,7 @@ const Dashboard = () => {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState('');
     const [tip, setTip] = useState(''); // State for the motivational tip
+    const [workouts, setWorkouts] = useState([]); // State for recommended workouts
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,9 +21,19 @@ const Dashboard = () => {
                 const response = await axios.get(`http://127.0.0.1:5000/api/users/${userId}`);
                 setUserData(response.data);
                 setError('');
+
+                // Fetch workouts based on user's goals
+                if (response.data.goals) {
+                    console.log("Fetching workouts for goal:", response.data.goals); // Add this
+                    const workoutResponse = await axios.get(
+                        `http://127.0.0.1:5000/api/workouts/${encodeURIComponent(response.data.goals)}`
+                    );
+                    console.log("Fetched workouts:", workoutResponse.data.workouts); // Add this line
+                    setWorkouts(workoutResponse.data.workouts || []);
+                }
             } catch (err) {
                 console.error(err);
-                setError('Failed to fetch user data.');
+                setError('Failed to fetch user data or workouts.');
             }
         };
 
@@ -71,9 +82,32 @@ const Dashboard = () => {
             </p>
 
             {/* Motivational Tip Section */}
-            <div className="bg-white shadow-md rounded px-8 py-6 w-full max-w-lg text-center">
+            <div className="bg-white shadow-md rounded px-8 py-6 w-full max-w-lg text-center mb-6">
                 <h2 className="text-xl font-semibold mb-4">Daily Motivation</h2>
                 <p className="text-blue-500 italic text-lg">{tip || 'Loading tip...'}</p>
+            </div>
+
+            {/* Workout Recommendations Section */}
+            <div className="bg-white shadow-md rounded px-8 py-6 w-full max-w-lg text-center">
+                <h2 className="text-xl font-semibold mb-4">Recommended Workouts</h2>
+                {workouts.length > 0 ? (
+                    <ul className="list-disc list-inside text-left">
+                        {workouts.map((workout, index) => (
+                            <li key={index}>
+                                <strong>{workout.name}</strong> - {workout.duration} minutes, {workout.calories_burned} calories burned
+                                <ul className="list-disc list-inside ml-4">
+                                    {workout.exercises.map((exercise, idx) => (
+                                        <li key={idx}>
+                                            {exercise.name}: {exercise.sets} sets of {exercise.reps} reps
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-gray-500">No workouts available for your goals yet.</p>
+                )}
             </div>
 
             <div className="flex space-x-4 mt-6">

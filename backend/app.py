@@ -119,10 +119,12 @@ def get_tip():
 
 @app.route('/api/workouts/<goal>', methods=['GET'])
 def get_workouts_by_goal(goal):
+    print(f"Received goal: {goal}")  # Add this for debugging
     # Find workouts that match the goal
     workouts = list(db.workouts.find({"goal": goal}, {"_id": 0}))  # Exclude the MongoDB ID
     if workouts:
-        return jsonify(workouts), 200
+        return jsonify({"workouts": workouts}), 200 #this line caused the front end to display that "no workouts were available"
+        #adding jsonify({"workouts": workouts}) instead of just (workouts) was causing the data to be fetched correctly as debugged in console.log, but it was not recognising the workouts array.
     else:
         return jsonify({"error": "No workouts found for this goal"}), 404
 
