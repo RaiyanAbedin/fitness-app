@@ -111,6 +111,29 @@ const Dashboard = () => {
             </div>
 
             <div className="flex space-x-4 mt-6">
+            <button
+                onClick={() => navigate('/workout-tracker')}
+                className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+            >
+                Workout Tracker
+            </button>
+
+
+
+            {/* Generate Workout Section */}
+            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4">AI-Generated Workouts</h2>
+                <p className="mb-4">
+                    Get personalized workout plans tailored to your goals and preferences.
+                </p>
+                <button
+                    onClick={() => navigate('/generate-workout')}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Generate Workout
+                </button>
+            </div>
+
                 <button
                     onClick={handleEditProfile}
                     className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"

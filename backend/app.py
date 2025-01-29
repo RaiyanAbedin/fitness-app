@@ -5,6 +5,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_cors import CORS
 
+from generate_workout import generate_workout  # Import your OpenAI function
+
+import openai
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -129,6 +133,96 @@ def get_workouts_by_goal(goal):
         return jsonify({"error": "No workouts found for this goal"}), 404
 
 
+
+@app.route('/api/generate-workout', methods=['POST'])
+def api_generate_workout():
+    data = request.json
+    goal = data.get('goal')
+    experience_level = data.get('experience_level')
+    time_available = data.get('time_available')
+
+    # Call OpenAI's workout generator
+    workout = generate_workout(goal, experience_level, time_available)
+    return jsonify({"workout": workout})
+
+# Add the new OpenAI route here
+@app.route('/api/openai', methods=['POST'])
+def test_openai_api():
+    data = request.json
+    prompt = data.get('prompt')
+
+    if not prompt:
+        return jsonify({"error": "Prompt is required"}), 400
+
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-003",  # Use the desired model
+            prompt=prompt,
+            max_tokens=150,
+            temperature=0.7
+        )
+        return jsonify({"response": response.choices[0].text.strip()})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+#workout section::::::::::::::::::::::
+# Add these new routes to your app.py
+
+from datetime import datetime
+
+# Route to log a workout
+@app.route('/api/workout-logs', methods=['POST'])
+def log_workout():
+    data = request.json
+    data['date'] = datetime.now().strftime('%Y-%m-%d')
+    
+    try:
+        result = db.workout_logs.insert_one(data)
+        return jsonify({"message": "Workout logged successfully", "id": str(result.inserted_id)}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Route to get user's workout history
+@app.route('/api/workout-logs/<user_id>', methods=['GET'])
+def get_workout_logs(user_id):
+    try:
+        logs = list(db.workout_logs.find(
+            {"user_id": user_id},
+            {"_id": 0}  # Exclude MongoDB ID
+        ).sort("date", -1))  # Sort by date descending
+        return jsonify({"workout_logs": logs}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Route to get a specific workout log
+@app.route('/api/workout-logs/<user_id>/<log_id>', methods=['GET'])
+def get_workout_log(user_id, log_id):
+    try:
+        log = db.workout_logs.find_one(
+            {"_id": ObjectId(log_id), "user_id": user_id},
+            {"_id": 0}
+        )
+        if log:
+            return jsonify(log), 200
+        return jsonify({"error": "Workout log not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Route to update a workout log
+@app.route('/api/workout-logs/<log_id>', methods=['PUT'])
+def update_workout_log(log_id):
+    try:
+        data = request.json
+        result = db.workout_logs.update_one(
+            {"_id": ObjectId(log_id)},
+            {"$set": data}
+        )
+        if result.modified_count:
+            return jsonify({"message": "Workout log updated successfully"}), 200
+        return jsonify({"error": "Workout log not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

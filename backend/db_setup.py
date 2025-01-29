@@ -76,6 +76,43 @@ def setup_database():
     })
     print("Inserted sample meal into 'meals' collection.")
 
+
+    # Add this to your existing db_setup.py
+
+def setup_workout_tracking():
+    # Create Workout Logs Collection
+    db.workout_logs.create_index([("user_id", 1), ("date", -1)])
+    
+    # Sample workout log
+    db.workout_logs.insert_one({
+        "user_id": "sample_user_id",
+        "date": "2025-01-29",
+        "exercises": [
+            {
+                "name": "Bench Press",
+                "sets": [
+                    {"set_number": 1, "weight": 135, "reps": 10},
+                    {"set_number": 2, "weight": 145, "reps": 8},
+                    {"set_number": 3, "weight": 155, "reps": 6}
+                ],
+                "notes": "Felt strong today"
+            },
+            {
+                "name": "Squats",
+                "sets": [
+                    {"set_number": 1, "weight": 185, "reps": 8},
+                    {"set_number": 2, "weight": 205, "reps": 6}
+                ],
+                "notes": "Working on form"
+            }
+        ],
+        "duration": 45,  # in minutes
+        "mood": "Energetic",
+        "notes": "Great workout session"
+    })
+
+
+
 # Run the setup
 if __name__ == "__main__":
     setup_database()

@@ -5,6 +5,8 @@ import Signup from './pages/Signup'; // Signup page component
 import Login from './pages/Login'; // Login page component
 import Dashboard from './pages/Dashboard';
 import EditProfile from './pages/EditProfile';
+import WorkoutTracker from './pages/WorkoutTracker';
+import GenerateWorkout from './pages/GenerateWorkout';
 
 const App = () => {
     return (
@@ -23,6 +25,12 @@ const App = () => {
 
             {/* Route for the edit profile page */}
             <Route path="/edit-profile" element={<EditProfile />} />
+
+            {/* Route for the workout tracker page */}
+            <Route path="/workout-tracker" element={<WorkoutTracker />} />
+
+            {/* Route for the generate workout page */}
+            <Route path="/generate-workout" element={<GenerateWorkout />} />
         </Routes>
     );
 };
