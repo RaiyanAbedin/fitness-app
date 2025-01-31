@@ -112,6 +112,16 @@ def setup_workout_tracking():
     })
 
 
+    # Create the workout_history collection with sample data (optional)
+    db.workout_history.insert_one({
+        "user_id": "example_user_id",
+        "date": "2025-01-21",
+        "workout_details": "Sample workout plan goes here."
+    })
+    print("Workout history collection created!")
+
+
+
 
 # Run the setup
 if __name__ == "__main__":

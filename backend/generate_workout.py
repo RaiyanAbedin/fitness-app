@@ -1,29 +1,57 @@
 import openai
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 def generate_workout(goal, experience_level, time_available):
-    openai.api_key = "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"
+    # Get API key from environment variable
+    openai.api_key = os.getenv('OPENAI_API_KEY')
+
+    system_prompt = """You are Alex, a friendly and supportive personal trainer. 
+    Write in a casual, encouraging tone as if talking to a friend.
+    Focus on making exercises sound fun and approachable.
+    Avoid technical jargon - use simple, everyday language.
+    Keep the structure clean but friendly.
+    
+    Remember:
+    - Use everyday language instead of technical terms
+    - Make it feel like a friend giving advice
+    - Keep exercise descriptions simple
+    - Add short, encouraging comments
+    - Include basic tips that are easy to understand"""
+
+    user_prompt = f"""Create a friendly {time_available}-minute workout plan for someone who wants to {goal}.
+    They are at a {experience_level} level.
+    
+    Include:
+    - A warm welcome and quick motivation
+    - Simple warm-up activities
+    - Main exercises with clear, simple instructions
+    - Quick cool-down
+    - A friendly closing note
+    
+    Make it feel achievable and fun!"""
 
     messages = [
-        {"role": "system", "content": "You are a personal fitness trainer."},
-        {
-            "role": "user",
-            "content": (
-                f"Please create a {time_available}-minute workout plan for someone "
-                f"with a fitness goal of '{goal}' and an experience level of '{experience_level}'. "
-                "Include exercises, reps, and sets."
-            ),
-        },
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
     ]
 
     try:
-        # Correct usage for the latest OpenAI API
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages,
-            max_tokens=500,
+            max_tokens=600,
             temperature=0.7,
         )
-        return response['choices'][0]['message']['content'].strip()
+        
+        workout_plan = response['choices'][0]['message']['content'].strip()
+        if not workout_plan:
+            return {"error": "Failed to generate a workout plan. Please try again."}
+            
+        return workout_plan
 
     except openai.OpenAIError as e:
         return {"error": str(e)}

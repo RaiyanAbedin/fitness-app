@@ -134,16 +134,57 @@ def get_workouts_by_goal(goal):
 
 
 
+# Fix the indentation of these routes in app.py
+
 @app.route('/api/generate-workout', methods=['POST'])
 def api_generate_workout():
     data = request.json
+    user_id = data.get('user_id')
     goal = data.get('goal')
     experience_level = data.get('experience_level')
     time_available = data.get('time_available')
 
     # Call OpenAI's workout generator
     workout = generate_workout(goal, experience_level, time_available)
-    return jsonify({"workout": workout})
+
+    if isinstance(workout, dict) and 'error' in workout:
+        return jsonify({"error": workout["error"]}), 400
+
+    # Save the workout to workout_history collection
+    workout_entry = {
+        "user_id": user_id,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "workout_details": workout,
+        "goal": goal,
+        "experience_level": experience_level,
+        "time_available": time_available
+    }
+
+    try:
+        db.workout_history.insert_one(workout_entry)
+        return jsonify({
+            "message": "Workout generated and saved successfully!", 
+            "workout": workout
+        }), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/workout-history/<user_id>', methods=['GET'])
+def get_workout_history(user_id):
+    try:
+        # Fetch workout history for the given user
+        workout_logs = list(db.workout_history.find(
+            {"user_id": user_id}, 
+            {"_id": 0}
+        ).sort("date", -1))  # Sort by date descending
+        
+        return jsonify({"workout_logs": workout_logs}), 200
+    except Exception as e:
+        print(f"Error fetching workout history: {str(e)}")  # Add logging
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 # Add the new OpenAI route here
 @app.route('/api/openai', methods=['POST'])

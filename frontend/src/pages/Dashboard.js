@@ -7,6 +7,7 @@ const Dashboard = () => {
     const [error, setError] = useState('');
     const [tip, setTip] = useState(''); // State for the motivational tip
     const [workouts, setWorkouts] = useState([]); // State for recommended workouts
+    const [aiGeneratedWorkouts, setAIGeneratedWorkouts] = useState([]); // State for AI-generated workouts
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,11 +25,11 @@ const Dashboard = () => {
 
                 // Fetch workouts based on user's goals
                 if (response.data.goals) {
-                    console.log("Fetching workouts for goal:", response.data.goals); // Add this
+                    console.log("Fetching workouts for goal:", response.data.goals);
                     const workoutResponse = await axios.get(
                         `http://127.0.0.1:5000/api/workouts/${encodeURIComponent(response.data.goals)}`
                     );
-                    console.log("Fetched workouts:", workoutResponse.data.workouts); // Add this line
+                    console.log("Fetched workouts:", workoutResponse.data.workouts);
                     setWorkouts(workoutResponse.data.workouts || []);
                 }
             } catch (err) {
@@ -46,8 +47,20 @@ const Dashboard = () => {
             }
         };
 
+        const fetchAIGeneratedWorkouts = async () => {
+            const userId = localStorage.getItem('user_id');
+            try {
+                const response = await axios.get(`http://127.0.0.1:5000/api/workout-history/${userId}`);
+                console.log("Fetched AI-generated workouts:", response.data.workout_logs);
+                setAIGeneratedWorkouts(response.data.workout_logs || []);
+            } catch (err) {
+                console.error('Failed to fetch AI-generated workouts.');
+            }
+        };
+
         fetchUserData();
         fetchTip();
+        fetchAIGeneratedWorkouts();
     }, []);
 
     const handleLogout = () => {
@@ -87,52 +100,35 @@ const Dashboard = () => {
                 <p className="text-blue-500 italic text-lg">{tip || 'Loading tip...'}</p>
             </div>
 
-            {/* Workout Recommendations Section */}
-            <div className="bg-white shadow-md rounded px-8 py-6 w-full max-w-lg text-center">
-                <h2 className="text-xl font-semibold mb-4">Recommended Workouts</h2>
-                {workouts.length > 0 ? (
-                    <ul className="list-disc list-inside text-left">
-                        {workouts.map((workout, index) => (
-                            <li key={index}>
-                                <strong>{workout.name}</strong> - {workout.duration} minutes, {workout.calories_burned} calories burned
-                                <ul className="list-disc list-inside ml-4">
-                                    {workout.exercises.map((exercise, idx) => (
-                                        <li key={idx}>
-                                            {exercise.name}: {exercise.sets} sets of {exercise.reps} reps
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                        ))}
-                    </ul>
+            {/* AI-Generated Workouts Section */}
+            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4">Your AI-Generated Workouts</h2>
+                {aiGeneratedWorkouts.length > 0 ? (
+                    aiGeneratedWorkouts.map((workout, index) => (
+                        <div key={index} className="bg-gray-100 p-4 rounded mb-4 shadow">
+                            <p className="text-gray-600">Date: {workout.date}</p>
+                            <p className="text-gray-800">{workout.workout_details}</p>
+                        </div>
+                    ))
                 ) : (
-                    <p className="text-gray-500">No workouts available for your goals yet.</p>
+                    <p className="text-gray-500">No AI-generated workouts saved yet.</p>
                 )}
             </div>
 
             <div className="flex space-x-4 mt-6">
-            <button
-                onClick={() => navigate('/workout-tracker')}
-                className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-            >
-                Workout Tracker
-            </button>
+                <button
+                    onClick={() => navigate('/workout-tracker')}
+                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                >
+                    Workout Tracker
+                </button>
 
-
-
-            {/* Generate Workout Section */}
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-4">AI-Generated Workouts</h2>
-                <p className="mb-4">
-                    Get personalized workout plans tailored to your goals and preferences.
-                </p>
                 <button
                     onClick={() => navigate('/generate-workout')}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
                 >
                     Generate Workout
                 </button>
-            </div>
 
                 <button
                     onClick={handleEditProfile}
