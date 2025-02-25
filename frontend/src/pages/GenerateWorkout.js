@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import WorkoutDisplay from './WorkoutDisplay';
 
 const GenerateWorkout = () => {
     const [goal, setGoal] = useState('');
@@ -31,7 +32,7 @@ const GenerateWorkout = () => {
             });
     
             setWorkout(response.data.workout);
-            await fetchSavedWorkouts(); // Fetch updated saved workouts
+            await fetchSavedWorkouts();
         } catch (err) {
             console.error('Error generating workout:', err);
             setError('Failed to generate workout. Please try again.');
@@ -61,7 +62,6 @@ const GenerateWorkout = () => {
         }
     };
 
-    // Fetch saved workouts on component mount
     useEffect(() => {
         fetchSavedWorkouts();
     }, []);
@@ -141,9 +141,7 @@ const GenerateWorkout = () => {
                 {workout && (
                     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                         <h2 className="text-xl font-semibold mb-4">Your Generated Workout Plan</h2>
-                        <div className="bg-gray-50 p-4 rounded border">
-                            <pre className="whitespace-pre-wrap font-sans">{workout}</pre>
-                        </div>
+                        <WorkoutDisplay workoutData={workout} />
                     </div>
                 )}
 
@@ -158,19 +156,8 @@ const GenerateWorkout = () => {
                                         <span className="font-medium text-gray-800">
                                             {formatDate(log.date)}
                                         </span>
-                                        <span className="text-blue-600 font-medium">
-                                            Goal: {log.goal}
-                                        </span>
                                     </div>
-                                    <div className="text-sm text-gray-600 mb-3">
-                                        <span className="mr-4">Level: {log.experience_level}</span>
-                                        <span>Duration: {log.time_available} minutes</span>
-                                    </div>
-                                    <div className="bg-white p-4 rounded border">
-                                        <pre className="whitespace-pre-wrap font-sans text-gray-800">
-                                            {log.workout_details}
-                                        </pre>
-                                    </div>
+                                    <WorkoutDisplay workoutData={log.workout_details} />
                                 </div>
                             ))}
                         </div>

@@ -42,7 +42,36 @@ def generate_workout(goal, experience_level, time_available):
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=messages,
+            messages = [
+    {"role": "system", "content": "You are a fitness AI assistant that creates structured JSON workouts."},
+    {
+        "role": "user",
+        "content": f"""
+        Generate a {time_available}-minute workout plan for a {experience_level} user with the goal of {goal}.
+        
+        Return the workout plan **strictly** in JSON format with this structure:
+        {{
+            "goal": "{goal}",
+            "experience_level": "{experience_level}",
+            "time_available": {time_available},
+            "exercises": [
+                {{
+                    "name": "Exercise Name",
+                    "sets": 3,
+                    "reps": 12
+                }},
+                {{
+                    "name": "Another Exercise",
+                    "sets": 3,
+                    "reps": 10
+                }}
+            ]
+        }}
+        Do **not** include explanations, just return JSON.
+        """
+    }
+]
+,
             max_tokens=600,
             temperature=0.7,
         )

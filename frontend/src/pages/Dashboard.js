@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import WorkoutDisplay from './WorkoutDisplay';
 
 const Dashboard = () => {
     const [userData, setUserData] = useState(null);
@@ -63,6 +64,17 @@ const Dashboard = () => {
         fetchAIGeneratedWorkouts();
     }, []);
 
+    const formatDate = (dateString) => {
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('user_id');
         navigate('/login');
@@ -81,68 +93,103 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center p-4">
-            <h1 className="text-3xl font-bold mb-6 text-center">
-                Welcome, {userData.name}!
-            </h1>
-            <p className="text-lg mb-4">Email: {userData.email}</p>
-            <p className="text-lg mb-4">Age: {userData.age}</p>
-            <p className="text-lg mb-4">Height: {userData.height} cm</p>
-            <p className="text-lg mb-4">Weight: {userData.weight} kg</p>
-            <p className="text-lg mb-4">Goals: {userData.goals}</p>
-            <p className="text-lg mb-4">
-                Dietary Preferences: {userData.dietary_preferences?.join(', ')}
-            </p>
-
-            {/* Motivational Tip Section */}
-            <div className="bg-white shadow-md rounded px-8 py-6 w-full max-w-lg text-center mb-6">
-                <h2 className="text-xl font-semibold mb-4">Daily Motivation</h2>
-                <p className="text-blue-500 italic text-lg">{tip || 'Loading tip...'}</p>
-            </div>
-
-            {/* AI-Generated Workouts Section */}
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-4">Your AI-Generated Workouts</h2>
-                {aiGeneratedWorkouts.length > 0 ? (
-                    aiGeneratedWorkouts.map((workout, index) => (
-                        <div key={index} className="bg-gray-100 p-4 rounded mb-4 shadow">
-                            <p className="text-gray-600">Date: {workout.date}</p>
-                            <p className="text-gray-800">{workout.workout_details}</p>
+        <div className="min-h-screen bg-gray-100 p-6">
+            <div className="max-w-4xl mx-auto">
+                {/* User Profile Card */}
+                <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h1 className="text-2xl font-bold mb-4">Welcome, {userData.name}!</h1>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p className="text-gray-600 mb-1">Email</p>
+                            <p className="text-gray-800 font-medium mb-3">{userData.email}</p>
+                            
+                            <p className="text-gray-600 mb-1">Age</p>
+                            <p className="text-gray-800 font-medium mb-3">{userData.age}</p>
+                            
+                            <p className="text-gray-600 mb-1">Height</p>
+                            <p className="text-gray-800 font-medium mb-3">{userData.height} cm</p>
                         </div>
-                    ))
-                ) : (
-                    <p className="text-gray-500">No AI-generated workouts saved yet.</p>
-                )}
-            </div>
+                        <div>
+                            <p className="text-gray-600 mb-1">Weight</p>
+                            <p className="text-gray-800 font-medium mb-3">{userData.weight} kg</p>
+                            
+                            <p className="text-gray-600 mb-1">Goals</p>
+                            <p className="text-gray-800 font-medium mb-3">{userData.goals}</p>
+                            
+                            <p className="text-gray-600 mb-1">Dietary Preferences</p>
+                            <p className="text-gray-800 font-medium">
+                                {userData.dietary_preferences?.join(', ') || 'None specified'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-            <div className="flex space-x-4 mt-6">
-                <button
-                    onClick={() => navigate('/workout-tracker')}
-                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-                >
-                    Workout Tracker
-                </button>
+                {/* Motivational Tip Section */}
+                <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h2 className="text-xl font-semibold mb-4">Daily Motivation</h2>
+                    <p className="text-blue-500 italic text-lg text-center">{tip || 'Loading tip...'}</p>
+                </div>
 
-                <button
-                    onClick={() => navigate('/generate-workout')}
-                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-                >
-                    Generate Workout
-                </button>
+                {/* Latest AI-Generated Workout Section */}
+                <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h2 className="text-xl font-semibold mb-4">Your Latest Workout</h2>
+                    {aiGeneratedWorkouts.length > 0 ? (
+                        <div className="bg-gray-50 p-4 rounded border">
+                            <div className="flex flex-wrap justify-between mb-3">
+                                <span className="font-medium text-gray-800">
+                                    {formatDate(aiGeneratedWorkouts[0].date)}
+                                </span>
+                            </div>
+                            <WorkoutDisplay workoutData={aiGeneratedWorkouts[0].workout_details} />
+                        </div>
+                    ) : (
+                        <p className="text-gray-500 text-center py-4">
+                            No workout history yet. Generate your first workout to get started!
+                        </p>
+                    )}
+                    <div className="mt-4 text-center">
+                        <button
+                            onClick={() => navigate('/generate-workout')}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm"
+                        >
+                            View All Workouts
+                        </button>
+                    </div>
+                </div>
 
-                <button
-                    onClick={handleEditProfile}
-                    className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"
-                >
-                    Edit Profile
-                </button>
+                {/* Action Buttons */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button
+                            onClick={() => navigate('/workout-tracker')}
+                            className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Workout Tracker
+                        </button>
 
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
-                >
-                    Logout
-                </button>
+                        <button
+                            onClick={() => navigate('/generate-workout')}
+                            className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition duration-200"
+                        >
+                            Generate Workout
+                        </button>
+
+                        <button
+                            onClick={handleEditProfile}
+                            className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition duration-200"
+                        >
+                            Edit Profile
+                        </button>
+
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition duration-200"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
