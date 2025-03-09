@@ -370,7 +370,7 @@ def update_workout_plan():
 
     try:
         result = db.workout_plans.update_one(
-            {"user_id": ObjectId(user_id), "plan_name": plan_name},  # ✅ Ensure `user_id` is an ObjectId
+            {"user_id": user_id, "plan_name": plan_name},  # Don't convert to ObjectId - this caused an error before as front-end was sending it as a string
             {"$set": {"exercises": exercises}}
         )
 

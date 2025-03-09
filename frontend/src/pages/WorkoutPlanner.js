@@ -95,7 +95,7 @@ const WorkoutPlanner = () => {
                 ? "http://127.0.0.1:5000/api/update-workout-plan" 
                 : "http://127.0.0.1:5000/api/save-workout-plan";
             
-            const response = await axios.post(endpoint, {
+                const response = await axios[editMode ? "put" : "post"](endpoint, {    //issue: in front end i was making POST request, but backend route was expecting PUT, thus plans would not edit!
                 user_id: userId,
                 plan_name: planName,
                 exercises: customPlan
@@ -228,7 +228,7 @@ if (!confirmDelete) {
         return (
             <div
                 ref={drop}
-                className={`p-6 border-dashed border-2 rounded-lg ${isOver ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}
+                className={`p-6 border-dashed border-2 rounded-lg min-h-[500px] ${isOver ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}
             >
                 {customPlan.length > 0 ? (
                     customPlan.map((exercise, index) => (
