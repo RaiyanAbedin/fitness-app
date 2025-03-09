@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 // Import the new component
 import ExerciseLibrary from './ExerciseLibrary';
@@ -15,6 +17,7 @@ const WorkoutPlanner = () => {
     const [selectedPlan, setSelectedPlan] = useState(""); // Tracks selected plan
     const [editMode, setEditMode] = useState(false);    // Track if we're editing an existing plan
     const [editingPlanName, setEditingPlanName] = useState(""); // Store the name of the plan being edited
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchWorkoutBank();
@@ -213,6 +216,8 @@ const WorkoutPlanner = () => {
             >
                 <h3 className="text-lg font-bold">{exercise.exercise_name}</h3>
                 <p className="text-gray-600">Sets: {exercise.sets} | Reps: {exercise.reps}</p>
+
+                
             </div>
         );
     };
@@ -261,6 +266,14 @@ const WorkoutPlanner = () => {
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="min-h-screen bg-gray-100 p-6">
+            <div className="max-w-6xl mx-auto mb-4">
+                <button 
+                    onClick={() => navigate('/dashboard')} 
+                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                >
+                    ← Back to Dashboard
+                </button>
+            </div>
                 <div className="max-w-6xl mx-auto grid grid-cols-2 gap-6 mb-6">
                     {/* Left Column - Workout Bank */}
                     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -366,6 +379,16 @@ const WorkoutPlanner = () => {
                                         <p className="text-gray-600">Sets: {exercise.sets} | Reps: {exercise.reps}</p>
                                     </div>
                                 ))}
+                            <button
+                                onClick={() => navigate('/workout-tracker', { 
+                                    state: { 
+                                        plan: savedPlans.find(plan => plan.plan_name === selectedPlan) 
+                                    } 
+                                })}
+                                className="w-full mt-4 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+                            >
+                                Start Workout with This Plan
+                            </button>
                         </div>
                     )}
                 </div>

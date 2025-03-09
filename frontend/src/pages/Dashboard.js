@@ -3,6 +3,19 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import WorkoutDisplay from './WorkoutDisplay';
 
+import { 
+    Weight, 
+    Target, 
+    Apple, 
+    User, 
+    Calendar, 
+    ArrowUp, 
+    Activity,
+    Leaf,
+    Wheat,
+    Dumbells,
+  } from 'lucide-react';
+
 const Dashboard = () => {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState('');
@@ -96,32 +109,97 @@ const Dashboard = () => {
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="max-w-4xl mx-auto">
                 {/* User Profile Card */}
-                <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <h1 className="text-2xl font-bold mb-4">Welcome, {userData.name}!</h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-gray-600 mb-1">Email</p>
-                            <p className="text-gray-800 font-medium mb-3">{userData.email}</p>
-                            
-                            <p className="text-gray-600 mb-1">Age</p>
-                            <p className="text-gray-800 font-medium mb-3">{userData.age}</p>
-                            
-                            <p className="text-gray-600 mb-1">Height</p>
-                            <p className="text-gray-800 font-medium mb-3">{userData.height} cm</p>
-                        </div>
-                        <div>
-                            <p className="text-gray-600 mb-1">Weight</p>
-                            <p className="text-gray-800 font-medium mb-3">{userData.weight} kg</p>
-                            
-                            <p className="text-gray-600 mb-1">Goals</p>
-                            <p className="text-gray-800 font-medium mb-3">{userData.goals}</p>
-                            
-                            <p className="text-gray-600 mb-1">Dietary Preferences</p>
-                            <p className="text-gray-800 font-medium">
-                                {userData.dietary_preferences?.join(', ') || 'None specified'}
-                            </p>
+                <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                    {/* Profile Header */}
+                    <div className="bg-gradient-to-r from-violet-800 to-violet-100 p-6 text-white">
+                        <div className="flex items-center gap-4">
+                            <div className="bg-white/20 p-4 rounded-full">
+                                <User className="w-12 h-12" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold">{userData.name}</h2>
+                                <p className="opacity-80 flex items-center gap-1">
+                                    <Calendar className="w-4 h-4" />
+                                    <span>{userData.email}</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Profile Stats */}
+                    <div className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Weight Stat */}
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="bg-blue-500 p-2 rounded-full text-white">
+                                        <Weight className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-700">Weight</h3>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <p className="text-2xl font-bold text-blue-700">{userData.weight} kg</p>
+                                    <div className="text-gray-600 flex items-center text-sm">
+                                        <Activity className="w-4 h-4" />
+                                        <span>Age: {userData.age} | {userData.height} cm</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Goal Stat */}
+                            <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="bg-purple-500 p-2 rounded-full text-white">
+                                        <Target className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-700">Goals</h3>
+                                </div>
+                                <div className="flex flex-col">
+                                    <p className="text-xl font-bold text-purple-700">{userData.goals}</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Activity className="w-4 h-4 text-purple-500" />
+                                        <span className="text-sm text-gray-600">Fitness journey in progress</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Dietary Preferences */}
+                            <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="bg-green-500 p-2 rounded-full text-white">
+                                        <Apple className="w-5 h-5" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-700">Dietary Preferences</h3>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                    {userData.dietary_preferences && userData.dietary_preferences.length > 0 ? (
+                                        userData.dietary_preferences.map((pref, index) => (
+                                            <span key={index} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm flex items-center gap-1">
+                                                {pref.toLowerCase().includes('vegan') ? (
+                                                    <><Leaf className="w-3 h-3" /> {pref}</>
+                                                ) : pref.toLowerCase().includes('gluten') ? (
+                                                    <><Wheat className="w-3 h-3" /> {pref}</>
+                                                ) : (
+                                                    <><Apple className="w-3 h-3" /> {pref}</>
+                                                )}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-gray-500">No preferences specified</span>
+                                    )}
+                                </div>
+                            </div>
+        </div>
+
+        <div className="flex justify-end mt-4">
+            <button
+                onClick={handleEditProfile}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 text-sm"
+            >
+                Edit Profile
+            </button>
+        </div>
+    </div>
                 </div>
 
                 {/* Motivational Tip Section */}

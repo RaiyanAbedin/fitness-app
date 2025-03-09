@@ -4,29 +4,54 @@ import axios from 'axios';
 
 const ExerciseLibrary = ({ onAddToCustomPlan }) => {
     const [exercises, setExercises] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [allExercises, setAllExercises] = useState([]);
+    const [selectedMuscle, setSelectedMuscle] = useState('all');
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [muscles, setMuscles] = useState(['all']);
 
     useEffect(() => {
-        fetchExercises();
-    }, [selectedCategory]);
+        fetchAllExercises();
+    }, []);
 
-    const fetchExercises = async () => {
+    useEffect(() => {
+        filterExercises();
+    }, [selectedMuscle, allExercises]);
+
+    const fetchAllExercises = async () => {
         setLoading(true);
         try {
-            const url = selectedCategory === 'all' 
-                ? 'http://127.0.0.1:5000/api/exercise-library'
-                : `http://127.0.0.1:5000/api/exercise-library?category=${selectedCategory}`;
-                
-            const response = await axios.get(url);
+            const response = await axios.get('http://127.0.0.1:5000/api/exercise-library');
             if (response.data.exercises) {
-                setExercises(response.data.exercises);
+                setAllExercises(response.data.exercises);
+                
+                // Extract all unique muscles from the exercises
+                const muscleSet = new Set();
+                response.data.exercises.forEach(exercise => {
+                    exercise.muscles_targeted.forEach(muscle => {
+                        muscleSet.add(muscle);
+                    });
+                });
+                
+                // Sort muscles alphabetically
+                const sortedMuscles = Array.from(muscleSet).sort();
+                setMuscles(['all', ...sortedMuscles]);
             }
         } catch (err) {
             console.error("Error fetching exercise library:", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const filterExercises = () => {
+        if (selectedMuscle === 'all') {
+            setExercises(allExercises);
+        } else {
+            const filtered = allExercises.filter(exercise => 
+                exercise.muscles_targeted.includes(selectedMuscle)
+            );
+            setExercises(filtered);
         }
     };
 
@@ -44,46 +69,53 @@ const ExerciseLibrary = ({ onAddToCustomPlan }) => {
             
             <div className="mb-4">
                 <select 
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    value={selectedMuscle}
+                    onChange={(e) => setSelectedMuscle(e.target.value)}
                     className="p-2 border rounded"
                 >
-                    <option value="all">All Categories</option>
-                    <option value="strength">Strength</option>
-                    <option value="cardio">Cardio</option>
-                    <option value="flexibility">Flexibility</option>
-                    <option value="core">Core</option>
+                    {muscles.map(muscle => (
+                        <option key={muscle} value={muscle}>
+                            {muscle === 'all' ? 'All Muscles' : muscle}
+                        </option>
+                    ))}
                 </select>
             </div>
             
-            {loading ? (
-                <p className="text-center">Loading exercises...</p>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {exercises.map((exercise, index) => (
-                        <div key={index} className="border rounded-lg p-4 bg-gray-50">
-                            <h3 className="text-lg font-bold">{exercise.name}</h3>
-                            <p className="text-gray-600 text-sm mb-2">
-                                {exercise.muscles_targeted.join(', ')}
-                            </p>
-                            <div className="flex justify-between mt-3">
-                                <button
-                                    onClick={() => setSelectedExercise(exercise)}
-                                    className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
-                                >
-                                    Details
-                                </button>
-                                <button
-                                    onClick={() => handleAddToCustomPlan(exercise)}
-                                    className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
-                                >
-                                    Add to Plan
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+            {/* Added fixed height scrollable container */}
+            <div className="h-[500px] overflow-y-auto pr-2">
+                {loading ? (
+                    <p className="text-center">Loading exercises...</p>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {exercises.length > 0 ? (
+                            exercises.map((exercise, index) => (
+                                <div key={index} className="border rounded-lg p-4 bg-gray-50 mb-3">
+                                    <h3 className="text-lg font-bold">{exercise.name}</h3>
+                                    <p className="text-gray-600 text-sm mb-2">
+                                        {exercise.muscles_targeted.join(', ')}
+                                    </p>
+                                    <div className="flex justify-between mt-3">
+                                        <button
+                                            onClick={() => setSelectedExercise(exercise)}
+                                            className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
+                                        >
+                                            Details
+                                        </button>
+                                        <button
+                                            onClick={() => handleAddToCustomPlan(exercise)}
+                                            className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
+                                        >
+                                            Add to Plan
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray-500 col-span-3 text-center py-8">No exercises found for the selected muscle.</p>
+                        )}
+                    </div>
+                )}
+            </div>
             
             {/* Exercise Details Modal */}
             {selectedExercise && (

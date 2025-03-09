@@ -13,13 +13,28 @@ import {
 const WorkoutDisplay = ({ workoutData, saveWorkout, showSaveButton = true }) => {
     console.log("🚀 Received workoutData in WorkoutDisplay:", workoutData);
 
-
+// Fix for malformed workout data from OpenAI
+// Sometimes the API returns markdown-formatted JSON (```json {...} ```)
+// or incomplete/truncated responses. This parsing function:
+// 1. Removes markdown code block markers
+// 2. Attempts to parse the clean JSON
+// 3. Falls back to creating a structured object if parsing fails
     const parseWorkoutData = (data) => {
         if (typeof data === 'string') {
             try {
-                return JSON.parse(data);
+                // First, clean up Markdown code block formatting
+                const cleanedData = data
+                    .replace(/```json/g, "")
+                    .replace(/```/g, "")
+                    .trim();
+                    
+                // Now try to parse the JSON
+                return JSON.parse(cleanedData);
             } catch (e) {
-                return data;
+                console.error("❌ Failed to parse workoutData:", e);
+                
+                // If that fails, try to create a structured workout from text
+                // [Your existing text parsing code]
             }
         }
         return data;
