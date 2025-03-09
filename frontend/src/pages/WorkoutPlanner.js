@@ -3,6 +3,9 @@ import axios from "axios";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
+// Import the new component
+import ExerciseLibrary from './ExerciseLibrary';
+
 const ItemType = "WORKOUT";
 
 const WorkoutPlanner = () => {
@@ -95,7 +98,7 @@ const WorkoutPlanner = () => {
                 ? "http://127.0.0.1:5000/api/update-workout-plan" 
                 : "http://127.0.0.1:5000/api/save-workout-plan";
             
-                const response = await axios[editMode ? "put" : "post"](endpoint, {    //issue: in front end i was making POST request, but backend route was expecting PUT, thus plans would not edit!
+            const response = await axios[editMode ? "put" : "post"](endpoint, {
                 user_id: userId,
                 plan_name: planName,
                 exercises: customPlan
@@ -137,7 +140,7 @@ const WorkoutPlanner = () => {
             const response = await axios.put("http://127.0.0.1:5000/api/update-workout-plan", {
                 user_id: userId,
                 plan_name: planToUpdate.plan_name,
-                exercises: customPlan.length > 0 ? customPlan : planToUpdate.exercises, // ✅ Fix: Use either customPlan or saved plan exercises
+                exercises: customPlan.length > 0 ? customPlan : planToUpdate.exercises, // Use either customPlan or saved plan exercises
             });
     
             if (response.status === 200) {
@@ -162,10 +165,9 @@ const WorkoutPlanner = () => {
         }
 
         const confirmDelete = window.confirm(`Are you sure you want to delete the plan "${selectedPlan}"?`);
-if (!confirmDelete) {
-    return;
-}
-
+        if (!confirmDelete) {
+            return;
+        }
 
         try {
             const userId = localStorage.getItem("user_id");
@@ -194,7 +196,7 @@ if (!confirmDelete) {
         }
     };
 
-    // ✅ Drag Source Component
+    // Drag Source Component
     const WorkoutCard = ({ exercise }) => {
         const [{ isDragging }, drag] = useDrag(() => ({
             type: ItemType,
@@ -207,7 +209,7 @@ if (!confirmDelete) {
         return (
             <div
                 ref={drag}
-                className={`p-4 border rounded-lg bg-gray-50 shadow-sm cursor-grab ${isDragging ? "opacity-50" : ""}`}
+                className={`p-4 border rounded-lg bg-gray-50 shadow-sm cursor-grab ${isDragging ? "opacity-50" : ""} mb-3`}
             >
                 <h3 className="text-lg font-bold">{exercise.exercise_name}</h3>
                 <p className="text-gray-600">Sets: {exercise.sets} | Reps: {exercise.reps}</p>
@@ -215,7 +217,7 @@ if (!confirmDelete) {
         );
     };
 
-    // ✅ Drop Target Component
+    // Drop Target Component
     const DropZone = () => {
         const [{ isOver }, drop] = useDrop(() => ({
             accept: ItemType,
@@ -228,7 +230,7 @@ if (!confirmDelete) {
         return (
             <div
                 ref={drop}
-                className={`p-6 border-dashed border-2 rounded-lg min-h-[500px] ${isOver ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}
+                className={`p-6 border-dashed border-2 rounded-lg min-h-[500px] ${isOver ? "border-blue-500 bg-blue-50" : "border-gray-300"} overflow-y-auto`}
             >
                 {customPlan.length > 0 ? (
                     customPlan.map((exercise, index) => (
@@ -259,11 +261,12 @@ if (!confirmDelete) {
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="min-h-screen bg-gray-100 p-6">
-                <div className="max-w-6xl mx-auto grid grid-cols-2 gap-6">
+                <div className="max-w-6xl mx-auto grid grid-cols-2 gap-6 mb-6">
                     {/* Left Column - Workout Bank */}
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         <h2 className="text-xl font-semibold mb-4">Workout Bank</h2>
-                        <div className="space-y-4">
+                        {/* Added scrollable container with fixed height */}
+                        <div className="h-[600px] overflow-y-auto pr-2">
                             {workoutBank.length > 0 ? (
                                 workoutBank.map((exercise, index) => (
                                     <WorkoutCard key={index} exercise={exercise} />
@@ -287,7 +290,8 @@ if (!confirmDelete) {
                         <div className="mt-4 flex gap-2">
                             <button
                                 onClick={saveCustomPlan}
-                                className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed"
+                                disabled={customPlan.length === 0}
                             >
                                 {editMode ? "Update Plan" : "Save Plan"}
                             </button>
@@ -303,9 +307,14 @@ if (!confirmDelete) {
                         </div>
                     </div>
                 </div>
+                
+                {/* Exercise Library component */}
+                <div className="max-w-6xl mx-auto mb-6">
+                    <ExerciseLibrary onAddToCustomPlan={addToCustomPlan} />
+                </div>
 
                 {/* Saved Workout Plans Section */}
-                <div className="max-w-6xl mx-auto mt-6 bg-white p-6 rounded-lg shadow-md">
+                <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
                     <h2 className="text-xl font-semibold mb-4">Your Saved Workout Plans</h2>
                     {savedPlans.length > 0 ? (
                         <div className="mb-4">
@@ -327,7 +336,7 @@ if (!confirmDelete) {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={loadPlanForEditing}
-                                        className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                        className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
                                         disabled={editMode}
                                     >
                                         Edit Plan
@@ -338,7 +347,6 @@ if (!confirmDelete) {
                                     >
                                         Delete Plan
                                     </button>
-                                    
                                 </div>
                             )}
                         </div>
@@ -353,7 +361,7 @@ if (!confirmDelete) {
                             {savedPlans
                                 .find((plan) => plan.plan_name === selectedPlan)
                                 ?.exercises.map((exercise, index) => (
-                                    <div key={index} className="p-4 border rounded-lg bg-gray-50 shadow-sm">
+                                    <div key={index} className="p-4 border rounded-lg bg-gray-50 shadow-sm mb-2">
                                         <h3 className="text-lg font-bold">{exercise.exercise_name}</h3>
                                         <p className="text-gray-600">Sets: {exercise.sets} | Reps: {exercise.reps}</p>
                                     </div>

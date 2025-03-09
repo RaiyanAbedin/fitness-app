@@ -404,5 +404,19 @@ def delete_workout_plan():
         return jsonify({"error": str(e)}), 500
 
 
+#endpoint for exercise library
+@app.route('/api/exercise-library', methods=['GET'])
+def get_exercise_library():
+    category = request.args.get('category', None)
+    try:
+        # Apply category filter if provided
+        filter_query = {"category": category} if category else {}
+        exercises = list(db.exercise_library.find(filter_query, {"_id": 0}))
+        return jsonify({"exercises": exercises}), 200
+    except Exception as e:
+        print(f"Error fetching exercise library: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True)

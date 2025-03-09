@@ -1,0 +1,33 @@
+
+[
+    {
+      "name": "Push-ups",
+      "category": "strength",
+      "muscles_targeted": ["Chest", "Shoulders", "Triceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Start in a plank position with hands shoulder-width apart. Lower your body until your chest nearly touches the floor, then push back up.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Squats",
+      "category": "strength",
+      "muscles_targeted": ["Quadriceps", "Hamstrings", "Glutes"],
+      "recommended_sets": 3,
+      "recommended_reps": 15,
+      "instructions": "Stand with feet shoulder-width apart. Lower your body by bending your knees and pushing your hips back as if sitting in a chair. Return to standing position.",
+      "difficulty": "beginner"
+    }
+
+    ,
+    {
+      "name": "Plank",
+      "category": "core",
+      "muscles_targeted": ["Core", "Shoulders", "Back"],
+      "recommended_sets": 3,
+      "recommended_reps": 30,
+      "instructions": "Start in a plank position with hands shoulder-width apart. Engage your core muscles and keep your body straight. Hold for 30 seconds.",
+      "difficulty": "beginner"
+    }
+    
+  ]
