@@ -1,4 +1,3 @@
-
 [
     {
       "name": "Push-ups",
@@ -17,17 +16,266 @@
       "recommended_reps": 15,
       "instructions": "Stand with feet shoulder-width apart. Lower your body by bending your knees and pushing your hips back as if sitting in a chair. Return to standing position.",
       "difficulty": "beginner"
-    }
-
-    ,
+    },
     {
       "name": "Plank",
       "category": "core",
       "muscles_targeted": ["Core", "Shoulders", "Back"],
       "recommended_sets": 3,
-      "recommended_reps": 30,
-      "instructions": "Start in a plank position with hands shoulder-width apart. Engage your core muscles and keep your body straight. Hold for 30 seconds.",
+      "recommended_reps": "30 seconds",
+      "instructions": "Start in a forearm plank position with elbows under shoulders. Engage your core muscles and keep your body in a straight line from head to heels. Hold the position.",
       "difficulty": "beginner"
+    },
+    {
+      "name": "Bench Press",
+      "category": "strength",
+      "muscles_targeted": ["Chest", "Shoulders", "Triceps"],
+      "recommended_sets": 4,
+      "recommended_reps": 10,
+      "instructions": "Lie on a bench with feet flat on the floor. Grip the barbell slightly wider than shoulder-width. Lower the bar to your chest, then press back up to full arm extension.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Deadlift",
+      "category": "strength",
+      "muscles_targeted": ["Lower Back", "Glutes", "Hamstrings", "Quads"],
+      "recommended_sets": 4,
+      "recommended_reps": 8,
+      "instructions": "Stand with feet hip-width apart, barbell over midfoot. Bend at hips and knees to grip the bar. Keeping back flat, stand up with the weight, pushing hips forward at the top.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Pull-ups",
+      "category": "strength",
+      "muscles_targeted": ["Back", "Biceps", "Shoulders"],
+      "recommended_sets": 3,
+      "recommended_reps": 8,
+      "instructions": "Hang from a bar with hands slightly wider than shoulder-width. Pull your body up until your chin clears the bar, then lower with control.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Lunges",
+      "category": "strength",
+      "muscles_targeted": ["Quadriceps", "Hamstrings", "Glutes"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Stand with feet together. Step forward with one leg and lower your body until both knees form 90-degree angles. Push back to starting position and repeat with the other leg.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Dumbbell Shoulder Press",
+      "category": "strength",
+      "muscles_targeted": ["Shoulders", "Triceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Sit or stand with dumbbells at shoulder height, palms facing forward. Press the weights up until your arms are fully extended, then lower back to starting position.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Bicep Curls",
+      "category": "strength",
+      "muscles_targeted": ["Biceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Stand with dumbbells in hand, arms extended by your sides, palms facing forward. Keeping elbows close to your body, curl the weights up toward your shoulders, then lower with control.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Tricep Dips",
+      "category": "strength",
+      "muscles_targeted": ["Triceps", "Shoulders", "Chest"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Sit on the edge of a bench or chair with hands next to hips. Slide your butt off the edge and lower your body by bending your elbows. Push back up until arms are straight.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Lat Pulldown",
+      "category": "strength",
+      "muscles_targeted": ["Back", "Biceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Sit at a lat pulldown machine and grip the bar wider than shoulder-width. Pull the bar down to chest level while keeping your back straight, then return to starting position with control.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Leg Press",
+      "category": "strength",
+      "muscles_targeted": ["Quadriceps", "Hamstrings", "Glutes"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Sit in the leg press machine with feet shoulder-width apart on the platform. Release the safety catches and lower the platform by bending your knees. Push through your heels to return to starting position.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Crunches",
+      "category": "core",
+      "muscles_targeted": ["Abdominals"],
+      "recommended_sets": 3,
+      "recommended_reps": 15,
+      "instructions": "Lie on your back with knees bent and feet flat on the floor. Place hands behind your head. Contract your abs to lift your shoulders off the floor, then lower back down with control.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Russian Twists",
+      "category": "core",
+      "muscles_targeted": ["Obliques", "Abdominals"],
+      "recommended_sets": 3,
+      "recommended_reps": 20,
+      "instructions": "Sit on the floor with knees bent and feet slightly elevated. Lean back slightly and twist your torso to the right, then to the left. Each twist counts as one rep.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Mountain Climbers",
+      "category": "cardio",
+      "muscles_targeted": ["Core", "Shoulders", "Legs"],
+      "recommended_sets": 3,
+      "recommended_reps": "30 seconds",
+      "instructions": "Start in a push-up position. Alternate bringing each knee toward your chest in a running motion while keeping your hips low and back flat.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Jumping Jacks",
+      "category": "cardio",
+      "muscles_targeted": ["Full Body"],
+      "recommended_sets": 3,
+      "recommended_reps": "30 seconds",
+      "instructions": "Stand with feet together and arms at your sides. Jump while spreading your legs and raising your arms overhead. Jump again to return to starting position.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Burpees",
+      "category": "cardio",
+      "muscles_targeted": ["Full Body"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Start standing, then squat down and place hands on floor. Jump feet back into a plank, perform a push-up, jump feet forward to hands, then explosively jump up with arms overhead.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Dumbbell Rows",
+      "category": "strength",
+      "muscles_targeted": ["Back", "Biceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Place one knee and hand on a bench, other foot on floor. Hold a dumbbell in free hand, arm extended. Pull the weight up to your side while keeping your back flat, then lower.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Leg Curls",
+      "category": "strength",
+      "muscles_targeted": ["Hamstrings"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Lie face down on a leg curl machine with the pad against your ankles. Curl your legs up by bending at the knees, bringing your heels toward your buttocks. Lower with control.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Leg Extensions",
+      "category": "strength",
+      "muscles_targeted": ["Quadriceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Sit on a leg extension machine with ankles against the lower pad. Extend your legs forward until knees are straight, then lower back to starting position with control.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Calf Raises",
+      "category": "strength",
+      "muscles_targeted": ["Calves"],
+      "recommended_sets": 3,
+      "recommended_reps": 15,
+      "instructions": "Stand with feet hip-width apart, balls of feet on an elevated surface. Lower heels below the level of the platform, then raise up onto tiptoes as high as possible.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Overhead Press",
+      "category": "strength",
+      "muscles_targeted": ["Shoulders", "Triceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 10,
+      "instructions": "Stand with feet shoulder-width apart, barbell at shoulder level. Press the bar overhead until arms are fully extended, then lower back to shoulders with control.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Dumbbell Fly",
+      "category": "strength",
+      "muscles_targeted": ["Chest", "Shoulders"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Lie on a bench with dumbbells extended above chest, palms facing each other. Lower weights out to sides in an arc until you feel a stretch in your chest, then bring them back together.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Tricep Pushdown",
+      "category": "strength",
+      "muscles_targeted": ["Triceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Stand at a cable machine with a rope or bar attachment at chest height. Grip the attachment and push down until arms are fully extended, keeping elbows close to body.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Face Pulls",
+      "category": "strength",
+      "muscles_targeted": ["Rear Deltoids", "Upper Back"],
+      "recommended_sets": 3,
+      "recommended_reps": 15,
+      "instructions": "Set a cable pulley to upper chest height with a rope attachment. Pull the rope toward your face, separating the ends as you pull and focusing on squeezing your shoulder blades together.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Glute Bridges",
+      "category": "strength",
+      "muscles_targeted": ["Glutes", "Hamstrings"],
+      "recommended_sets": 3,
+      "recommended_reps": 15,
+      "instructions": "Lie on your back with knees bent and feet flat on the floor. Drive through your heels to lift your hips up until your body forms a straight line from shoulders to knees. Lower with control.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Lateral Raises",
+      "category": "strength",
+      "muscles_targeted": ["Shoulders"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Stand with feet shoulder-width apart, holding dumbbells at your sides. Keeping arms slightly bent, raise the weights out to the sides until arms are parallel to the floor, then lower.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Hanging Leg Raises",
+      "category": "core",
+      "muscles_targeted": ["Lower Abdominals", "Hip Flexors"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Hang from a pull-up bar with arms extended. Keeping legs straight, raise them until they're parallel to the floor, then lower with control.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Seated Cable Row",
+      "category": "strength",
+      "muscles_targeted": ["Back", "Biceps"],
+      "recommended_sets": 3,
+      "recommended_reps": 12,
+      "instructions": "Sit at a cable row machine with feet braced and knees slightly bent. Pull the handle toward your lower abdomen while keeping your back straight, then return to starting position.",
+      "difficulty": "beginner"
+    },
+    {
+      "name": "Chest Dips",
+      "category": "strength",
+      "muscles_targeted": ["Chest", "Triceps", "Shoulders"],
+      "recommended_sets": 3,
+      "recommended_reps": 10,
+      "instructions": "Support yourself on parallel bars with arms straight. Lower your body by bending your elbows, leaning forward slightly to target chest. Push back up to starting position.",
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Romanian Deadlift",
+      "category": "strength",
+      "muscles_targeted": ["Hamstrings", "Glutes", "Lower Back"],
+      "recommended_sets": 3,
+      "recommended_reps": 10,
+      "instructions": "Stand with feet hip-width apart, holding a barbell in front of thighs. Keeping back flat and knees slightly bent, hinge at hips to lower the bar toward the floor, then return to standing.",
+      "difficulty": "intermediate"
     }
-    
   ]

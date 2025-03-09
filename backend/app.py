@@ -16,9 +16,10 @@ app = Flask(__name__)
 
 
 
-# Enable CORS for your Flask app
+# Enable CORS for your Flask app - if cors errors come, restart react and flask server
 # Fixed CORS error by allowing credentials & headers, which were blocked in the previous config.
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+
 
 
 
@@ -318,6 +319,23 @@ def get_workout_bank(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+#allows users to delete exercises from the bank
+@app.route('/api/workout-bank/<exercise_id>', methods=['DELETE'])
+def delete_exercise(exercise_id):
+    try:
+        userId = request.args.get('user_id')
+        if not userId:
+            return jsonify({"error": "User ID is required"}), 400
+            
+        result = db.workout_bank.delete_one({"_id": ObjectId(exercise_id), "user_id": userId})
+        
+        if result.deleted_count == 0:
+            return jsonify({"error": "Exercise not found or not authorized to delete"}), 404
+            
+        return jsonify({"message": "Exercise removed successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 
