@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import EditProfile from './pages/EditProfile';
 import WorkoutTracker from './pages/WorkoutTracker';
 import GenerateWorkout from './pages/GenerateWorkout';
+import WorkoutPlanner from './pages/WorkoutPlanner';
 
 const App = () => {
     return (
@@ -31,6 +32,10 @@ const App = () => {
 
             {/* Route for the generate workout page */}
             <Route path="/generate-workout" element={<GenerateWorkout />} />
+
+            {/* Route for WorkoutPlanner page */}
+            <Route path="/workout-planner" element={<WorkoutPlanner />} />
+
         </Routes>
     );
 };

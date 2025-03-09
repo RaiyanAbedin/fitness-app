@@ -66,15 +66,34 @@ const GenerateWorkout = () => {
         fetchSavedWorkouts();
     }, []);
 
-    const formatDate = (dateString) => {
-        const options = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit', 
-            minute: '2-digit'
-        };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+    // ✅ FIX: Define saveWorkout function
+    const saveWorkout = async (exercise) => {
+        try {
+            const userId = localStorage.getItem("user_id");
+            if (!userId) {
+                setError("User not logged in.");
+                return;
+            }
+
+            console.log("Saving exercise to API:", exercise); // Debugging log
+
+            const response = await axios.post("http://127.0.0.1:5000/api/save-exercise", {
+                user_id: userId,
+                exercise_name: exercise.name,
+                sets: exercise.sets,
+                reps: exercise.reps
+            });
+
+            console.log("Save Response:", response.data); // Debugging log
+
+            if (response.status === 201) {
+                alert("Workout saved successfully!");
+                fetchSavedWorkouts(); // Refresh saved workouts
+            }
+        } catch (err) {
+            console.error("Error saving workout:", err);
+            setError("Failed to save workout.");
+        }
     };
 
     return (
@@ -141,7 +160,7 @@ const GenerateWorkout = () => {
                 {workout && (
                     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                         <h2 className="text-xl font-semibold mb-4">Your Generated Workout Plan</h2>
-                        <WorkoutDisplay workoutData={workout} />
+                        <WorkoutDisplay workoutData={workout} saveWorkout={saveWorkout} />
                     </div>
                 )}
 
@@ -154,10 +173,10 @@ const GenerateWorkout = () => {
                                 <div key={index} className="bg-gray-50 p-4 rounded border">
                                     <div className="flex flex-wrap justify-between mb-3">
                                         <span className="font-medium text-gray-800">
-                                            {formatDate(log.date)}
+                                            {new Date(log.date).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <WorkoutDisplay workoutData={log.workout_details} />
+                                    <WorkoutDisplay workoutData={log.workout_details} saveWorkout={saveWorkout} />
                                 </div>
                             ))}
                         </div>

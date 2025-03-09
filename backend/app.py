@@ -14,8 +14,13 @@ import openai
 app = Flask(__name__)
 
 
+
+
 # Enable CORS for your Flask app
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+# Fixed CORS error by allowing credentials & headers, which were blocked in the previous config.
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+
+
 
 # Connect to MongoDB
 client = MongoClient("mongodb://localhost:27017/")
@@ -99,7 +104,7 @@ def update_user(id):
     
 import random
 
-# List of fitness tips or motivational quotes
+# List of fitness tips or motivational quotes , currently hardcoded but will change depending on nature of app/theme
 TIPS_AND_QUOTES = [
     "Level Up Your Fitness: Consistency is the only stat that truly matters.",
     "Become the Hunter: Hunt down your fitness goals with relentless determination.",
@@ -135,6 +140,7 @@ def get_workouts_by_goal(goal):
 
 
 # Fix the indentation of these routes in app.py
+#open ai integration for ai coaching advice/workouts
 
 @app.route('/api/generate-workout', methods=['POST'])
 def api_generate_workout():
@@ -262,6 +268,138 @@ def update_workout_log(log_id):
         if result.modified_count:
             return jsonify({"message": "Workout log updated successfully"}), 200
         return jsonify({"error": "Workout log not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+#workout bank - add workouts from the ai coach into a "bank" of workouts
+@app.route('/api/save-exercise', methods=['POST'])
+def save_exercise():
+    """
+    Save a selected exercise to the user's workout bank.
+    """
+    data = request.json
+    print("recieved request to save exercise:",data) #an example of this working is: {'user_id': '12345', 'exercise_name': 'Push-ups', 'sets': 3, 'reps': 12}
+
+    user_id = data.get("user_id")
+    exercise_name = data.get("exercise_name")
+    sets = data.get("sets")
+    reps = data.get("reps")
+
+    if not user_id or not exercise_name:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    exercise_entry = {
+        "user_id": user_id,
+        "exercise_name": exercise_name,
+        "sets": sets,
+        "reps": reps
+    }
+
+    try:
+        db.workout_bank.insert_one(exercise_entry)
+        return jsonify({"message": "Exercise saved successfully!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+#next - this will allow users to retrieve those workouts that were added to the bank
+@app.route('/api/workout-bank/<user_id>', methods=['GET'])
+def get_workout_bank(user_id):
+    """
+    Retrieve all saved exercises for a user from the workout bank.
+    """
+    try:
+        exercises = list(db.workout_bank.find({"user_id": user_id}, {"_id": 0}))  # Exclude MongoDB ID
+        if not exercises:
+            return jsonify({"message": "No exercises saved in the workout bank."}), 404
+        return jsonify({"exercises": exercises}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+#Backend API for saving custom plans -> this is to save plans that will be individual exercises dragged and dropped into the workout planner
+@app.route('/api/save-workout-plan', methods=['POST'])
+def save_workout_plan():
+    data = request.json
+    user_id = data.get("user_id")
+    plan_name = data.get("plan_name")
+    exercises = data.get("exercises")
+
+    if not user_id or not plan_name or not exercises:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    plan_entry = {
+        "user_id": user_id,
+        "plan_name": plan_name,
+        "exercises": exercises
+    }
+
+    try:
+        db.workout_plans.insert_one(plan_entry)
+        return jsonify({"message": "Workout plan saved successfully!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+#next - this will allow users to retrieve those workouts that were added to the bank
+@app.route('/api/workout-plans/<user_id>', methods=['GET'])
+def get_workout_plans(user_id):
+    try:
+        plans = list(db.workout_plans.find({"user_id": user_id}, {"_id": 0}))
+        return jsonify({"plans": plans}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Route to update a workout plan
+from bson import ObjectId  # Import ObjectId to properly query MongoDB
+
+@app.route('/api/update-workout-plan', methods=['PUT'])
+def update_workout_plan():
+    data = request.json
+    user_id = data.get("user_id")
+    plan_name = data.get("plan_name")
+    exercises = data.get("exercises")
+
+
+    if not user_id or not plan_name or not exercises:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    try:
+        result = db.workout_plans.update_one(
+            {"user_id": ObjectId(user_id), "plan_name": plan_name},  # ✅ Ensure `user_id` is an ObjectId
+            {"$set": {"exercises": exercises}}
+        )
+
+        if result.matched_count == 0:
+            return jsonify({"error": "Workout plan not found"}), 404
+
+        return jsonify({"message": "Workout plan updated successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+# Route to delete a workout plan
+@app.route('/api/delete-workout-plan', methods=['DELETE'])
+def delete_workout_plan():
+    data = request.json
+    user_id = data.get("user_id")
+    plan_name = data.get("plan_name")
+
+    if not user_id or not plan_name:
+        return jsonify({"error": "Missing user_id or plan_name"}), 400
+
+    try:
+        result = db.workout_plans.delete_one({"user_id": user_id, "plan_name": plan_name})
+
+        if result.deleted_count == 0:
+            return jsonify({"error": "Workout plan not found"}), 404
+
+        return jsonify({"message": "Workout plan deleted successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -140,7 +140,8 @@ const Dashboard = () => {
                                     {formatDate(aiGeneratedWorkouts[0].date)}
                                 </span>
                             </div>
-                            <WorkoutDisplay workoutData={aiGeneratedWorkouts[0].workout_details} />
+                            <WorkoutDisplay workoutData={aiGeneratedWorkouts[0].workout_details} showSaveButton={false} />
+
                         </div>
                     ) : (
                         <p className="text-gray-500 text-center py-4">
@@ -188,6 +189,14 @@ const Dashboard = () => {
                         >
                             Logout
                         </button>
+
+                        <button
+                        onClick={() => navigate('/workout-planner')}
+                        className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition duration-200"
+                    >
+                        Plan Your Workouts
+                    </button>
+
                     </div>
                 </div>
             </div>

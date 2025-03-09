@@ -10,7 +10,10 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-const WorkoutDisplay = ({ workoutData }) => {
+const WorkoutDisplay = ({ workoutData, saveWorkout, showSaveButton = true }) => {
+    console.log("🚀 Received workoutData in WorkoutDisplay:", workoutData);
+
+
     const parseWorkoutData = (data) => {
         if (typeof data === 'string') {
             try {
@@ -24,18 +27,25 @@ const WorkoutDisplay = ({ workoutData }) => {
 
     const workout = parseWorkoutData(workoutData);
 
-    if (typeof workout === 'string') {
-        return (
-            <div className="bg-white p-4 rounded border">
-                <pre className="whitespace-pre-wrap font-sans">{workout}</pre>
-            </div>
-        );
+    if (typeof workoutData === 'string') {
+        try {
+            // Remove any triple backticks if they exist - which was causing json errors and the workoutdisplay css to not show
+            workoutData = workoutData.replace(/```json/g, "").replace(/```/g, "");
+    
+            // Convert JSON string into an object
+            workoutData = JSON.parse(workoutData);
+        } catch (error) {
+            console.error("❌ Failed to parse workoutData:", error);
+        }
     }
+    
 
     if (!workout?.exercises) {
         return null;
     }
 
+
+    
     // Calculate estimated calories (rough estimate)
     const estimatedCalories = Math.round(
         workout.time_available * (
@@ -148,6 +158,16 @@ const WorkoutDisplay = ({ workoutData }) => {
                                     <p className="text-sm">{exercise.notes}</p>
                                 </div>
                             )}
+                            {/* Save to Workout Bank Button */}
+                            {showSaveButton && (
+                            <button 
+                                onClick={() => saveWorkout(exercise)}
+                                className="mt-3 bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600"
+                            >
+                                Save to Workout Bank
+                            </button>
+                        )}
+
                         </div>
                     </div>
                 ))}
