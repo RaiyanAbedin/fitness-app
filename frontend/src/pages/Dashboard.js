@@ -275,6 +275,13 @@ const Dashboard = () => {
                         Plan Your Workouts
                     </button>
 
+                        <button
+                            onClick={() => navigate('/nutrition')}
+                            className="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition duration-200"
+                        >
+                            Nutrition Hub
+                        </button>
+
                     </div>
                 </div>
             </div>

@@ -7,6 +7,8 @@ from flask_cors import CORS
 
 from generate_workout import generate_workout  # Import your OpenAI function
 
+from generate_meal import generate_meal 
+
 import openai
 
 
@@ -435,6 +437,99 @@ def get_exercise_library():
         print(f"Error fetching exercise library: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
+#Nutrition Section: 
+@app.route('/api/generate-meal', methods=['POST'])
+def api_generate_meal():
+    data = request.json
+    user_id = data.get('user_id')
+    meal_type = data.get('meal_type')
+    calories = data.get('calories')
+    meal_request = data.get('meal_request')
+    
+    # Get the user's dietary preferences
+    user = db.users.find_one({"_id": ObjectId(user_id)}, {"dietary_preferences": 1})
+    preferences = user.get("dietary_preferences", []) if user else []
+    
+    # Call the meal generator
+    meal = generate_meal(meal_type, preferences, calories)
+    
+    if isinstance(meal, dict) and 'error' in meal:
+        return jsonify({"error": meal["error"]}), 400
+    
+    # Save the meal to meal_history collection
+    meal_entry = {
+        "user_id": user_id,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "meal_details": meal,
+        "meal_type": meal_type,
+        "calories": calories
+    }
+    
+    try:
+        db.meal_history.insert_one(meal_entry)
+        return jsonify({
+            "message": "Meal generated and saved successfully!", 
+            "meal": meal
+        }), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/meal-history/<user_id>', methods=['GET'])
+def get_meal_history(user_id):
+    try:
+        # Fetch meal history for the given user
+        meal_logs = list(db.meal_history.find(
+            {"user_id": user_id}, 
+            {"_id": 0}
+        ).sort("date", -1))  # Sort by date descending
+        
+        return jsonify({"meal_logs": meal_logs}), 200
+    except Exception as e:
+        print(f"Error fetching meal history: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/save-recipe', methods=['POST'])
+def save_recipe():
+    """
+    Save a selected recipe to the user's recipe collection.
+    """
+    data = request.json
+    
+    user_id = data.get("user_id")
+    recipe_name = data.get("recipe_name")
+    ingredients = data.get("ingredients")
+    instructions = data.get("instructions")
+    nutrition = data.get("nutrition", {})
+    
+    if not user_id or not recipe_name:
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    recipe_entry = {
+        "user_id": user_id,
+        "recipe_name": recipe_name,
+        "ingredients": ingredients,
+        "instructions": instructions,
+        "nutrition": nutrition,
+        "date_saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    
+    try:
+        db.saved_recipes.insert_one(recipe_entry)
+        return jsonify({"message": "Recipe saved successfully!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/saved-recipes/<user_id>', methods=['GET'])
+def get_saved_recipes(user_id):
+    """
+    Retrieve all saved recipes for a user.
+    """
+    try:
+        recipes = list(db.saved_recipes.find({"user_id": user_id}, {"_id": 0}))
+        return jsonify({"recipes": recipes}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
