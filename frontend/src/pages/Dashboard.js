@@ -282,6 +282,13 @@ const Dashboard = () => {
                             Nutrition Hub
                         </button>
 
+                        <button
+    onClick={() => navigate('/shopping-list')}
+    className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition duration-200"
+>
+    Shopping List
+</button>
+
                     </div>
                 </div>
             </div>

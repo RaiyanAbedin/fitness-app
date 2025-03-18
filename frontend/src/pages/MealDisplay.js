@@ -1,7 +1,7 @@
 import React from 'react';
+import axios from 'axios';
 import { 
     Utensils,
-    Clock,
     ListOrdered,
     ShoppingBag,
     Info,
@@ -48,6 +48,25 @@ const MealDisplay = ({ mealData, saveRecipe, showSaveButton = true }) => {
     if (!meal?.dishes) {
         return <div className="p-4 bg-red-50 text-red-500 rounded">Invalid meal data</div>;
     }
+
+
+    const addIngredientsToShoppingList = async (dish) => {
+        try {
+            const userId = localStorage.getItem("user_id");
+            if (!userId) return;
+    
+            const response = await axios.post("http://127.0.0.1:5000/api/shopping-list/from-recipe", {
+                user_id: userId,
+                ingredients: dish.ingredients
+            });
+    
+            if (response.status === 201) {
+                alert("Ingredients added to shopping list!");
+            }
+        } catch (err) {
+            console.error("Error adding ingredients to shopping list:", err);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -147,12 +166,23 @@ const MealDisplay = ({ mealData, saveRecipe, showSaveButton = true }) => {
                         
                         {/* Save Button */}
                         {showSaveButton && (
-                            <button 
-                                onClick={() => saveRecipe(dish)}
-                                className="mt-3 flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                            >
-                                <Save className="w-4 h-4" /> Save Recipe
-                            </button>
+    <div className="flex gap-2">
+        <button 
+            onClick={() => saveRecipe(dish)}
+            className="mt-3 flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+            <Save className="w-4 h-4" /> Save Recipe
+        </button>
+        <button 
+            onClick={() => addIngredientsToShoppingList(dish)}
+            className="mt-3 flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+            <ShoppingBag className="w-4 h-4" /> Add to Shopping List
+        </button>
+    </div>
+
+                            
+                            
                         )}
                     </div>
                 ))}

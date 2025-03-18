@@ -9,6 +9,7 @@ import WorkoutTracker from './pages/WorkoutTracker';
 import GenerateWorkout from './pages/GenerateWorkout';
 import WorkoutPlanner from './pages/WorkoutPlanner';
 import GenerateMeal from './pages/GenerateMeal';
+import ShoppingList from './pages/ShoppingList';
 
 const App = () => {
     return (
@@ -39,6 +40,9 @@ const App = () => {
 
             {/* Route for GenerateMeal page */}
             <Route path="/nutrition" element={<GenerateMeal />} />
+
+            {/* Route for the shopping list page */}
+            <Route path="/shopping-list" element={<ShoppingList />} />
 
         </Routes>
     );

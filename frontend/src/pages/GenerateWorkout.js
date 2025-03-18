@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WorkoutDisplay from './WorkoutDisplay';
+import { useNavigate } from 'react-router-dom';
+
+import { 
+    ArrowLeft,
+} from 'lucide-react';
 
 const GenerateWorkout = () => {
     const [goal, setGoal] = useState('');
@@ -10,6 +15,7 @@ const GenerateWorkout = () => {
     const [savedWorkouts, setSavedWorkouts] = useState([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -84,7 +90,6 @@ const GenerateWorkout = () => {
                 reps: exercise.reps
             });
 
-            console.log("Save Response:", response.data); // Debugging log
 
             if (response.status === 201) {
                 alert("Workout saved successfully!");
@@ -99,6 +104,15 @@ const GenerateWorkout = () => {
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="max-w-4xl mx-auto">
+
+            <button
+                    onClick={() => navigate('/dashboard')}
+                    className="mb-6 flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                >
+                    <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+                </button>
+                
+
                 {/* Workout Generator Form */}
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                     <h1 className="text-2xl font-bold mb-4">Generate AI Workout</h1>
