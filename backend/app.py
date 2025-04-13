@@ -48,7 +48,7 @@ def signup():
     if "password" not in data or not data["password"]:
         return jsonify({"error": "Password is required"}), 400
 
-    # Use pbkdf2 explicitly to hash the password
+    # Use pbkdf2 explicitly to hash the password - a cryptographic algorithm that takes a password and makes it harder for brute-forced attacks
     data["password"] = generate_password_hash(data["password"], method='pbkdf2:sha256', salt_length=8)
     result = db.users.insert_one(data)
     return jsonify({"message": "User created", "user_id": str(result.inserted_id)}), 201
@@ -73,7 +73,7 @@ def login():
 
     # Check password
     if not check_password_hash(user["password"], data["password"]):
-        return jsonify({"error": "Invalid email or password"}), 401
+        return jsonify({"error": "Invalid email or password"}), 401 #the error message is the same for email and password , for security reasons
 
     return jsonify({"message": "Login successful", "user_id": str(user["_id"])}), 200
 
@@ -452,7 +452,12 @@ def api_generate_meal():
     preferences = user.get("dietary_preferences", []) if user else []
     
     # Call the meal generator
-    meal = generate_meal(meal_type, preferences, calories)
+    meal = generate_meal(meal_type, preferences, meal_request, calories) 
+
+     # Add these debugging print statements here
+    print(f"Meal request: {meal_request}")
+    print(f"Preferences: {preferences}")
+    print(f"Generated meal (preview): {meal[:100]}...")  # Print first 100 chars
     
     if isinstance(meal, dict) and 'error' in meal:
         return jsonify({"error": meal["error"]}), 400

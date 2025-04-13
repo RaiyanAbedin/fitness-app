@@ -32,13 +32,20 @@ const GenerateMeal = () => {
                 return;
             }
     
+            console.log("Sending meal request with params:", {
+                meal_type: mealType,
+                meal_request: mealRequest,
+                calories: calories
+            });
+    
             const response = await axios.post('http://127.0.0.1:5000/api/generate-meal', {
                 user_id: userId,
                 meal_type: mealType,
                 meal_request: mealRequest,
-                calories: calories || null  // Send null if no value provided
+                calories: calories || null
             });
     
+            console.log("Received meal response:", response.data);
             setMeal(response.data.meal);
             await fetchSavedMeals();
         } catch (err) {
@@ -113,6 +120,13 @@ const GenerateMeal = () => {
                     className="mb-6 flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+                </button>
+
+                <button
+                    onClick={() => navigate('/saved-recipes')}
+                    className="mb-6 flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200"
+                >
+                    <Utensils className="w-4 h-4" /> Saved Recipes
                 </button>
                 
                 {/* Meal Generator Form */}

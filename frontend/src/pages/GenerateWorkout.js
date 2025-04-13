@@ -115,7 +115,7 @@ const GenerateWorkout = () => {
 
                 {/* Workout Generator Form */}
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <h1 className="text-2xl font-bold mb-4">Generate AI Workout</h1>
+                    <h1 className="text-2xl font-bold mb-4">Lets Build Your Workout</h1>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block font-medium mb-2">Fitness Goal</label>

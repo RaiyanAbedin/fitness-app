@@ -10,6 +10,7 @@ import GenerateWorkout from './pages/GenerateWorkout';
 import WorkoutPlanner from './pages/WorkoutPlanner';
 import GenerateMeal from './pages/GenerateMeal';
 import ShoppingList from './pages/ShoppingList';
+import SavedRecipes from './pages/SavedRecipes';
 
 const App = () => {
     return (
@@ -43,6 +44,9 @@ const App = () => {
 
             {/* Route for the shopping list page */}
             <Route path="/shopping-list" element={<ShoppingList />} />
+
+            {/* Route for the saved recipes page */}
+            <Route path="/saved-recipes" element={<SavedRecipes />} />
 
         </Routes>
     );
