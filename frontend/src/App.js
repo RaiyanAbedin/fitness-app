@@ -8,6 +8,9 @@ import EditProfile from './pages/EditProfile';
 import WorkoutTracker from './pages/WorkoutTracker';
 import GenerateWorkout from './pages/GenerateWorkout';
 import WorkoutPlanner from './pages/WorkoutPlanner';
+import GenerateMeal from './pages/GenerateMeal';
+import ShoppingList from './pages/ShoppingList';
+import SavedRecipes from './pages/SavedRecipes';
 
 const App = () => {
     return (
@@ -35,6 +38,15 @@ const App = () => {
 
             {/* Route for WorkoutPlanner page */}
             <Route path="/workout-planner" element={<WorkoutPlanner />} />
+
+            {/* Route for GenerateMeal page */}
+            <Route path="/nutrition" element={<GenerateMeal />} />
+
+            {/* Route for the shopping list page */}
+            <Route path="/shopping-list" element={<ShoppingList />} />
+
+            {/* Route for the saved recipes page */}
+            <Route path="/saved-recipes" element={<SavedRecipes />} />
 
         </Routes>
     );

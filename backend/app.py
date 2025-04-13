@@ -7,6 +7,8 @@ from flask_cors import CORS
 
 from generate_workout import generate_workout  # Import your OpenAI function
 
+from generate_meal import generate_meal 
+
 import openai
 
 
@@ -46,7 +48,7 @@ def signup():
     if "password" not in data or not data["password"]:
         return jsonify({"error": "Password is required"}), 400
 
-    # Use pbkdf2 explicitly to hash the password
+    # Use pbkdf2 explicitly to hash the password - a cryptographic algorithm that takes a password and makes it harder for brute-forced attacks
     data["password"] = generate_password_hash(data["password"], method='pbkdf2:sha256', salt_length=8)
     result = db.users.insert_one(data)
     return jsonify({"message": "User created", "user_id": str(result.inserted_id)}), 201
@@ -71,7 +73,7 @@ def login():
 
     # Check password
     if not check_password_hash(user["password"], data["password"]):
-        return jsonify({"error": "Invalid email or password"}), 401
+        return jsonify({"error": "Invalid email or password"}), 401 #the error message is the same for email and password , for security reasons
 
     return jsonify({"message": "Login successful", "user_id": str(user["_id"])}), 200
 
@@ -434,6 +436,232 @@ def get_exercise_library():
     except Exception as e:
         print(f"Error fetching exercise library: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+#Nutrition Section: 
+@app.route('/api/generate-meal', methods=['POST'])
+def api_generate_meal():
+    data = request.json
+    user_id = data.get('user_id')
+    meal_type = data.get('meal_type')
+    calories = data.get('calories')
+    meal_request = data.get('meal_request')
+    
+    # Get the user's dietary preferences
+    user = db.users.find_one({"_id": ObjectId(user_id)}, {"dietary_preferences": 1})
+    preferences = user.get("dietary_preferences", []) if user else []
+    
+    # Call the meal generator
+    meal = generate_meal(meal_type, preferences, meal_request, calories) 
+
+     # Add these debugging print statements here
+    print(f"Meal request: {meal_request}")
+    print(f"Preferences: {preferences}")
+    print(f"Generated meal (preview): {meal[:100]}...")  # Print first 100 chars
+    
+    if isinstance(meal, dict) and 'error' in meal:
+        return jsonify({"error": meal["error"]}), 400
+    
+    # Save the meal to meal_history collection
+    meal_entry = {
+        "user_id": user_id,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "meal_details": meal,
+        "meal_type": meal_type,
+        "calories": calories
+    }
+    
+    try:
+        db.meal_history.insert_one(meal_entry)
+        return jsonify({
+            "message": "Meal generated and saved successfully!", 
+            "meal": meal
+        }), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/meal-history/<user_id>', methods=['GET'])
+def get_meal_history(user_id):
+    try:
+        # Fetch meal history for the given user
+        meal_logs = list(db.meal_history.find(
+            {"user_id": user_id}, 
+            {"_id": 0} # Exclude MongoDB ID, this may cause issues with the front-end and updating/delete - when i add that function in as this is a unique mongodb id that is assigned to each document, thus the front-end couldnt tell my backend which specific meal i could update or delete , when i do it?
+        ).sort("date", -1))  # Sort by date descending
+        
+        return jsonify({"meal_logs": meal_logs}), 200
+    except Exception as e:
+        print(f"Error fetching meal history: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/save-recipe', methods=['POST'])
+def save_recipe():
+    """
+    Save a selected recipe to the user's recipe collection.
+    """
+    data = request.json
+    
+    user_id = data.get("user_id")
+    recipe_name = data.get("recipe_name")
+    ingredients = data.get("ingredients")
+    instructions = data.get("instructions")
+    nutrition = data.get("nutrition", {})
+    
+    if not user_id or not recipe_name:
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    recipe_entry = {
+        "user_id": user_id,
+        "recipe_name": recipe_name,
+        "ingredients": ingredients,
+        "instructions": instructions,
+        "nutrition": nutrition,
+        "date_saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    
+    try:
+        db.saved_recipes.insert_one(recipe_entry)
+        return jsonify({"message": "Recipe saved successfully!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/saved-recipes/<user_id>', methods=['GET'])
+def get_saved_recipes(user_id):
+    """
+    Retrieve all saved recipes for a user.
+    """
+    try:
+        recipes = list(db.saved_recipes.find({"user_id": user_id}, {"_id": 0}))
+        return jsonify({"recipes": recipes}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+#Shopping List Section - Connects to the Nutrition
+# Shopping List Routes
+@app.route('/api/shopping-list/<user_id>', methods=['GET'])
+def get_shopping_list(user_id):
+    try:
+        shopping_list = list(db.shopping_list.find({"user_id": user_id})) #when querying the mongodb , makes sure url userid matches with the one in the db
+        # Convert ObjectId to string for each item
+        for item in shopping_list:
+            item['_id'] = str(item['_id']) #was having issues with update/delete. this is because mongo db assign a unique id to each document in the db - this example, the shopping list. so that you can specifically target it (delete/update etc) ensures you can find unique docs even if you have multiple items. e.g - apple and apple #2 
+            #original api route was filtering out these document id's : we removed: {"_id": 0}, as my front-end couldnt tell my backend which specific ingredient i could update or delete.
+        return jsonify({"shopping_list": shopping_list}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/shopping-list', methods=['POST'])
+def add_shopping_item():
+    """Add an item to the shopping list"""
+    data = request.json
+    user_id = data.get('user_id')
+    item_name = data.get('item_name')
+    category = data.get('category', 'Other')  # Default category
+    quantity = data.get('quantity', '1')      # Default quantity
+    
+    if not user_id or not item_name:
+        return jsonify({"error": "User ID and item name are required"}), 400
+        
+    item = {
+        "user_id": user_id,
+        "item_name": item_name,
+        "category": category,
+        "quantity": quantity,
+        "purchased": False,
+        "date_added": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    
+    try:
+        result = db.shopping_list.insert_one(item)
+        return jsonify({
+            "message": "Item added to shopping list",
+            "item_id": str(result.inserted_id)
+        }), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/shopping-list/<item_id>', methods=['PUT'])
+def update_shopping_item(item_id):
+    """Update a shopping list item (e.g., mark as purchased)"""
+    data = request.json
+    
+    try:
+        result = db.shopping_list.update_one(
+            {"_id": ObjectId(item_id)},
+            {"$set": data}
+        )
+        if result.modified_count:
+            return jsonify({"message": "Item updated successfully"}), 200
+        return jsonify({"error": "Item not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/shopping-list/<item_id>', methods=['DELETE'])
+def delete_shopping_item(item_id):
+    """Delete an item from the shopping list"""
+    try:
+        result = db.shopping_list.delete_one({"_id": ObjectId(item_id)})
+        if result.deleted_count:
+            return jsonify({"message": "Item deleted successfully"}), 200
+        return jsonify({"error": "Item not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/shopping-list/from-recipe', methods=['POST'])
+def add_recipe_to_shopping_list():
+    """Add all ingredients from a recipe to the shopping list"""
+    data = request.json
+    user_id = data.get('user_id')
+    ingredients = data.get('ingredients', [])
+    
+    if not user_id or not ingredients:
+        return jsonify({"error": "User ID and ingredients are required"}), 400
+    
+    items = []
+    for ingredient in ingredients:
+        # Simple parsing to extract quantity and category
+        # This is a basic implementation - could be enhanced with NLP
+        parts = ingredient.split()
+        quantity = "1"
+        
+        # Try to extract a numeric quantity
+        if parts and parts[0].replace('.', '', 1).isdigit():
+            quantity = parts[0]
+            ingredient = ' '.join(parts[1:])
+            
+        # Simplistic category determination - could be improved
+        category = "Other"
+        if any(keyword in ingredient.lower() for keyword in ["fruit", "apple", "banana", "berry"]):
+            category = "Fruits"
+        elif any(keyword in ingredient.lower() for keyword in ["vegetable", "carrot", "broccoli", "onion"]):
+            category = "Vegetables"
+        elif any(keyword in ingredient.lower() for keyword in ["meat", "chicken", "beef", "pork"]):
+            category = "Meat"
+        elif any(keyword in ingredient.lower() for keyword in ["milk", "cheese", "yogurt"]):
+            category = "Dairy"
+        elif any(keyword in ingredient.lower() for keyword in ["flour", "rice", "pasta", "bread"]):
+            category = "Grains"
+            
+        items.append({
+            "user_id": user_id,
+            "item_name": ingredient,
+            "category": category,
+            "quantity": quantity,
+            "purchased": False,
+            "date_added": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+    
+    try:
+        if items:
+            db.shopping_list.insert_many(items)
+            return jsonify({"message": f"Added {len(items)} ingredients to shopping list"}), 201
+        return jsonify({"message": "No items to add"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == "__main__":

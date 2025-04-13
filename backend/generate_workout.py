@@ -8,7 +8,7 @@ load_dotenv()
 def generate_workout(goal, experience_level, time_available):
     # Get API key from environment variable
     openai.api_key = os.getenv('OPENAI_API_KEY')
-
+#below is not used in final implementation
     system_prompt = """You are Alex, a friendly and supportive personal trainer. 
     Write in a casual, encouraging tone as if talking to a friend.
     Focus on making exercises sound fun and approachable.
@@ -21,7 +21,7 @@ def generate_workout(goal, experience_level, time_available):
     - Keep exercise descriptions simple
     - Add short, encouraging comments
     - Include basic tips that are easy to understand"""
-
+#this is also not used in final implementation - answers felt too jargon-y
     user_prompt = f"""Create a friendly {time_available}-minute workout plan for someone who wants to {goal}.
     They are at a {experience_level} level.
     
