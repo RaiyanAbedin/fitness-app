@@ -90,7 +90,7 @@ const WorkoutDisplay = ({ workoutData, saveWorkout, showSaveButton = true }) => 
     return (
         <div className="space-y-6">
             {/* Workout Summary Card */}
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white shadow-lg">
+            <div className="bg-gradient-to-r from-blue-700 to-blue-600 rounded-lg p-6 text-white shadow-lg">
                 <div className="flex items-center gap-2 mb-4">
                     <Trophy className="w-6 h-6" />
                     <h2 className="text-2xl font-bold">Workout Summary</h2>
@@ -151,20 +151,20 @@ const WorkoutDisplay = ({ workoutData, saveWorkout, showSaveButton = true }) => 
                             </div>
 
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Heart className="w-4 h-4 text-red-500" />
-                                    <span>Rest: {exercise.rest || '60-90'} sec</span>
-                                </div>
+                            <div className="flex items-center gap-2">
+                                <Heart className="w-4 h-4 text-red-500" />
+                                <span className="text-gray-700">Rest: {exercise.rest || '60-90'} sec</span>
+                            </div>
                                 
-                                <div className="flex items-center gap-2">
-                                    <Activity className="w-4 h-4 text-yellow-500" />
-                                    <span>Intensity: {exercise.intensity || 'Moderate'}</span>
-                                </div>
+                            <div className="flex items-center gap-2">
+                                <Activity className="w-4 h-4 text-yellow-500" />
+                                <span className="text-gray-700">Intensity: {exercise.intensity || 'Moderate'}</span>
+                            </div>
 
-                                <div className="flex items-center gap-2">
-                                    <Flame className="w-4 h-4 text-orange-500" />
-                                    <span>Target: {exercise.target || exercise.name.split(' ')[0]}</span>
-                                </div>
+                            <div className="flex items-center gap-2">
+                                <Flame className="w-4 h-4 text-orange-500" />
+                                <span className="text-gray-700">Target: {exercise.target || exercise.name.split(' ')[0]}</span>
+                            </div>
                             </div>
 
                             {exercise.notes && (
