@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, User, Mail, Lock, Calendar, Ruler, Weight, Target, Salad } from 'lucide-react';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ const Signup = () => {
 
     const [message, setMessage] = useState('');
     const [errors, setErrors] = useState({});
-    const navigate = useNavigate(); // Initialize navigate hook
+    const navigate = useNavigate();
 
     const validateForm = () => {
         const newErrors = {};
@@ -53,14 +54,12 @@ const Signup = () => {
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
     
-        // If checked, add the value to the dietary_preferences array
         if (checked) {
             setFormData((prevData) => ({
                 ...prevData,
                 dietary_preferences: [...prevData.dietary_preferences, value],
             }));
         } else {
-            // If unchecked, remove the value from the dietary_preferences array
             setFormData((prevData) => ({
                 ...prevData,
                 dietary_preferences: prevData.dietary_preferences.filter(
@@ -69,7 +68,6 @@ const Signup = () => {
             }));
         }
     };
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -83,11 +81,7 @@ const Signup = () => {
             });
             setMessage(`Success: ${response.data.message}`);
             setErrors({});
-
-            // Store the user_id in localStorage
             localStorage.setItem('user_id', response.data.user_id);
-
-            // Redirect to the dashboard
             navigate('/dashboard');
         } catch (error) {
             setMessage('');
@@ -97,186 +91,229 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-blue-100 text-gray-800">
-            <h1 className="text-2xl font-bold mb-6">Embrace the grind, ascend to greatness.</h1>
-            <form
-                className="flex flex-col bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                onSubmit={handleSubmit}
-            >
-                {/* Name */}
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.name && 'border-red-500'}`}
-                />
-                {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
-
-                {/* Gender */}
-                <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.gender && 'border-red-500'}`}
-                >
-                    <option value="" disabled>
-                        Select your gender
-                    </option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-                {errors.gender && <p className="text-red-500 text-xs">{errors.gender}</p>}
-
-
-                {/* Email */}
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.email && 'border-red-500'}`}
-                />
-                {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-
-                {/* Password */}
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${
-                        errors.password && 'border-red-500'
-                    }`}
-                />
-                {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-
-                {/* Age */}
-                <input
-                    type="number"
-                    name="age"
-                    placeholder="Age"
-                    value={formData.age}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.age && 'border-red-500'}`}
-                />
-                {errors.age && <p className="text-red-500 text-xs">{errors.age}</p>}
-
-                {/* Height */}
-                <input
-                    type="number"
-                    name="height"
-                    placeholder="Height (cm)"
-                    value={formData.height}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.height && 'border-red-500'}`}
-                />
-                {errors.height && <p className="text-red-500 text-xs">{errors.height}</p>}
-
-                {/* Weight */}
-                <input
-                    type="number"
-                    name="weight"
-                    placeholder="Weight (kg)"
-                    value={formData.weight}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.weight && 'border-red-500'}`}
-                />
-                {errors.weight && <p className="text-red-500 text-xs">{errors.weight}</p>}
-
-                {/* Goals */}
-                <select
-                    name="goals"
-                    value={formData.goals}
-                    onChange={handleChange}
-                    className={`mb-2 px-4 py-2 border rounded ${errors.goals && 'border-red-500'}`}
-                >
-                    <option value="" disabled>
-                        Select your goal
-                    </option>
-                    <option value="Gain Weight">Gain Weight</option>
-                    <option value="Lose Weight">Lose Weight</option>
-                    <option value="Maintain Body Fat">Maintain Body Fat</option>
-                </select>
-                {errors.goals && <p className="text-red-500 text-xs">{errors.goals}</p>}
-
-                {/* Dietary Preferences */}
-<div className="mb-4">
-    <label className="font-bold mb-2 block">Dietary Preferences</label>
-    <div className="flex flex-col gap-y-2">
-        <label className="flex items-center">
-            <input
-                type="checkbox"
-                name="dietary_preferences"
-                value="Halal"
-                checked={formData.dietary_preferences.includes('Halal')}
-                onChange={handleCheckboxChange}
-                className="mr-2"
-            />
-            Halal
-        </label>
-        <label className="flex items-center">
-            <input
-                type="checkbox"
-                name="dietary_preferences"
-                value="Vegan"
-                checked={formData.dietary_preferences.includes('Vegan')}
-                onChange={handleCheckboxChange}
-                className="mr-2"
-            />
-            Vegan
-        </label>
-        <label className="flex items-center">
-            <input
-                type="checkbox"
-                name="dietary_preferences"
-                value="Vegetarian"
-                checked={formData.dietary_preferences.includes('Vegetarian')}
-                onChange={handleCheckboxChange}
-                className="mr-2"
-            />
-            Vegetarian
-        </label>
-        <label className="flex items-center">
-            <input
-                type="checkbox"
-                name="dietary_preferences"
-                value="Gluten-Free"
-                checked={formData.dietary_preferences.includes('Gluten-Free')}
-                onChange={handleCheckboxChange}
-                className="mr-2"
-            />
-            Gluten-Free
-        </label>
-    </div>
-    {errors.dietary_preferences && (
-        <p className="text-red-500 text-xs">{errors.dietary_preferences}</p>
-    )}
-</div>
-
-
-
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-                >
-                    Start Forging Your Own Legend.
-                </button>
-            </form>
-            {message && <p className="text-blue-500">{message}</p>}
-
-
-            <button
-                onClick={() => navigate('/login')} // Navigate to signup page
-                className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600"
-            >
-                Already have an account? Log In
-            </button>
-
+        <div className="min-h-screen bg-black text-white py-10 px-4">
+            <div className="max-w-3xl mx-auto">
+                {/* Logo/Branding */}
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#0ff] to-[#f0f]">
+                        NuroFit
+                    </h1>
+                    <p className="text-gray-400 mt-2">Begin Your Fitness Journey</p>
+                </div>
+                
+                {/* Signup Form */}
+                <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8">
+                    <h2 className="text-2xl font-bold mb-6 text-center">Create Your Account</h2>
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Personal Information */}
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Full Name</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <User className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.name ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    />
+                                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Gender</label>
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className={`bg-gray-800/50 border ${errors.gender ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                >
+                                    <option value="" disabled>Select your gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender}</p>}
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Email</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <Mail className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.email ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    />
+                                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Password</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <Lock className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.password ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    />
+                                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+                                </div>
+                            </div>
+                            
+                            {/* Physical Attributes */}
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Age</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <Calendar className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        name="age"
+                                        value={formData.age}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.age ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    />
+                                    {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age}</p>}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Height (cm)</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <Ruler className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        name="height"
+                                        value={formData.height}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.height ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    />
+                                    {errors.height && <p className="text-red-500 text-xs mt-1">{errors.height}</p>}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Weight (kg)</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <Weight className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <input
+                                        type="number"
+                                        name="weight"
+                                        value={formData.weight}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.weight ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    />
+                                    {errors.weight && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-gray-300 block text-sm">Fitness Goal</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <Target className="h-5 w-5 text-gray-500" />
+                                    </div>
+                                    <select
+                                        name="goals"
+                                        value={formData.goals}
+                                        onChange={handleChange}
+                                        className={`bg-gray-800/50 border ${errors.goals ? 'border-red-500' : 'border-gray-700'} text-white rounded-lg block w-full pl-10 p-3 focus:ring-[#0ff] focus:border-[#0ff] outline-none`}
+                                    >
+                                        <option value="" disabled>Select your goal</option>
+                                        <option value="Gain Weight">Gain Weight</option>
+                                        <option value="Lose Weight">Lose Weight</option>
+                                        <option value="Maintain Body Fat">Maintain Body Fat</option>
+                                    </select>
+                                    {errors.goals && <p className="text-red-500 text-xs mt-1">{errors.goals}</p>}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Dietary Preferences */}
+                        <div className="space-y-3">
+                            <label className="text-gray-300 block">
+                                <Salad className="inline-block h-5 w-5 text-[#0ff] mr-2" />
+                                Dietary Preferences
+                            </label>
+                            <div className={`bg-gray-800/50 border ${errors.dietary_preferences ? 'border-red-500' : 'border-gray-700'} rounded-lg p-4 grid grid-cols-2 gap-3`}>
+                                {['Halal', 'Vegan', 'Vegetarian', 'Gluten-Free'].map((pref) => (
+                                    <label key={pref} className="flex items-center space-x-2 text-gray-300">
+                                        <input
+                                            type="checkbox"
+                                            name="dietary_preferences"
+                                            value={pref}
+                                            checked={formData.dietary_preferences.includes(pref)}
+                                            onChange={handleCheckboxChange}
+                                            className="rounded bg-gray-700 border-gray-600 text-[#0ff] focus:ring-[#0ff] focus:ring-offset-gray-800"
+                                        />
+                                        <span>{pref}</span>
+                                    </label>
+                                ))}
+                            </div>
+                            {errors.dietary_preferences && (
+                                <p className="text-red-500 text-xs">{errors.dietary_preferences}</p>
+                            )}
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            className="w-full bg-gradient-to-r from-[#0ff] to-[#f0f] hover:opacity-90 text-black font-bold py-3 px-4 rounded-lg flex items-center justify-center"
+                        >
+                            Create Account <ArrowRight className="ml-2 h-5 w-5" />
+                        </button>
+                    </form>
+                    
+                    {/* Error/Success Messages */}
+                    {message && (
+                        <div className={`mt-4 p-3 rounded-lg text-center ${message.includes('Error') ? 'bg-red-900/50 border border-red-800 text-red-200' : 'bg-green-900/50 border border-green-800 text-green-200'}`}>
+                            {message}
+                        </div>
+                    )}
+                </div>
+                
+                {/* Login Link */}
+                <div className="mt-6 text-center">
+                    <p className="text-gray-400">
+                        Already have an account?{' '}
+                        <button 
+                            onClick={() => navigate('/login')}
+                            className="text-[#0ff] hover:underline"
+                        >
+                            Log In
+                        </button>
+                    </p>
+                </div>
+                
+                {/* Back to Home Link */}
+                <div className="mt-4 text-center">
+                    <button 
+                        onClick={() => navigate('/')}
+                        className="text-gray-500 hover:text-gray-300 text-sm"
+                    >
+                        ← Back to Home
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
