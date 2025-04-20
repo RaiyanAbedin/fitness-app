@@ -90,7 +90,7 @@ const WorkoutDisplay = ({ workoutData, saveWorkout, showSaveButton = true }) => 
     return (
         <div className="space-y-6">
             {/* Workout Summary Card */}
-            <div className="bg-gradient-to-r from-blue-700 to-blue-600 rounded-lg p-6 text-white shadow-lg">
+            <div className="bg-gradient-to-r from-green-900 to-blue-900 rounded-lg p-6 text-white shadow-lg">
                 <div className="flex items-center gap-2 mb-4">
                     <Trophy className="w-6 h-6" />
                     <h2 className="text-2xl font-bold">Workout Summary</h2>

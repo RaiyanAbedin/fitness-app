@@ -11,7 +11,7 @@ const LandingPage = () => {
       <header className="container mx-auto px-4 py-20 md:py-32">
         <div className="flex flex-col items-center text-center">
           <div className="relative mb-6">
-            <Sparkles className="h-12 w-12 text-[#0ff] animate-pulse" />
+            <Salad className="h-12 w-12 text-[#0ff] animate-pulse" />
             <div className="absolute inset-0 blur-xl bg-[#0ff] opacity-30 rounded-full"></div>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#0ff] to-[#f0f] leading-tight">
@@ -76,9 +76,9 @@ const LandingPage = () => {
               description: "AI generates targeted workout routines based on your fitness level, available time, and specific goals. Save and experiment with different routines.",
             },
             {
-              icon: <Zap className="h-10 w-10 text-[#0ff]" />,
+              icon: <Zap className="h-10 w-10 text-[#deff23]" />,
               title: "Real-time Tracking",
-              description: "The second-brain for logging workouts, tracking your progress and maintaining a detailed history of your fitness journey",
+              description: "The second-brain for logging workouts, tracking your progress and maintaining a detailed history of your fitness journey.",
             },
           ].map((feature, index) => (
             <div
@@ -110,7 +110,7 @@ const LandingPage = () => {
                 name: "University Student",
                 role: "Aiming to Gain Muscle Within a Hectic Student Routine",
                 quote:
-                  "Balancing my dissertation as a final year student, graduate job applications and part time-work, entering the gym felt overwhelming. NuroFit's personalized workout plans and meal suggestions have been a lifesaver, I have been able to focus on my weaker muscle groups due to their smart recommendations whilst balancing my workload.",
+                  "Balancing my dissertation as a final year student, graduate job applications and part time-work, entering the gym felt overwhelming. NuroFit's personalized workout plans and meal suggestions have been a lifesaver. I have been able to focus on my weaker muscle groups due to their smart recommendations whilst balancing my workload.",
               },
               {
                 name: "Vegan User",
@@ -127,7 +127,7 @@ const LandingPage = () => {
             ].map((testimonial, index) => (
               <div key={index} className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-800">
                 <div className="flex items-center mb-4">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#0ff] to-[#f0f] mr-4"></div>
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#0004ff] to-[#f0f] mr-4"></div>
                   <div>
                     <h4 className="font-bold text-white">{testimonial.name}</h4>
                     <p className="text-sm text-gray-400">{testimonial.role}</p>

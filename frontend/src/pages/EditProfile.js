@@ -19,7 +19,6 @@ const EditProfile = () => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
-    // Fetch user data when the component loads
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -53,8 +52,6 @@ const EditProfile = () => {
 
     const handleCheckboxChange = (e) => {
         const { value, checked } = e.target;
-
-        // Add or remove dietary preferences based on the checkbox state
         setFormData((prevData) => ({
             ...prevData,
             dietary_preferences: checked
@@ -93,12 +90,12 @@ const EditProfile = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center p-6">
-                <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-                    <div className="text-red-500 text-center font-semibold mb-4">{error}</div>
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center p-6">
+                <div className="bg-gray-800/70 backdrop-blur-sm p-8 rounded-lg shadow-lg border border-red-500/50 max-w-md w-full">
+                    <div className="text-red-400 text-center font-semibold mb-4">{error}</div>
                     <button
                         onClick={() => navigate('/dashboard')}
-                        className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        className="w-full bg-gradient-to-r from-[#0ff] to-[#f0f] text-white px-4 py-2 rounded hover:opacity-90"
                     >
                         Return to Dashboard
                     </button>
@@ -109,8 +106,8 @@ const EditProfile = () => {
 
     if (!userData) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="text-blue-500 text-xl animate-pulse">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center">
+                <div className="text-[#0ff] text-xl animate-pulse">
                     Loading...
                 </div>
             </div>
@@ -118,19 +115,19 @@ const EditProfile = () => {
     }
 
     return (
-        <div className="min-h-screen bg-black p-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 p-6">
             <div className="max-w-4xl mx-auto">
                 {/* Back button */}
                 <button
                     onClick={() => navigate('/dashboard')}
-                    className="mb-6 flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+                    className="mb-6 flex items-center gap-2 px-4 py-2 bg-gray-800/70 text-white rounded backdrop-blur-sm border border-gray-700 hover:border-[#0ff]/50"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back to Dashboard
                 </button>
                 
-                <div className="bg-white rounded-lg shadow-md p-8">
-                    <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <User className="w-6 h-6 text-blue-500" />
+                <div className="bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-md p-8 border border-gray-700">
+                    <h1 className="text-2xl font-bold mb-6 flex items-center gap-2 text-white">
+                        <User className="w-6 h-6 text-[#0ff]" />
                         Edit Profile
                     </h1>
                     
@@ -140,34 +137,34 @@ const EditProfile = () => {
                     >
                         {/* Name */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Name</label>
+                            <label className="block text-sm font-medium text-gray-300">Name</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <User className="h-5 w-5 text-gray-400" />
+                                    <User className="h-5 w-5 text-gray-500" />
                                 </div>
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="pl-10 w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                 />
                             </div>
                         </div>
 
                         {/* Email */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Email</label>
+                            <label className="block text-sm font-medium text-gray-300">Email</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-400" />
+                                    <Mail className="h-5 w-5 text-gray-500" />
                                 </div>
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="pl-10 w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                 />
                             </div>
                         </div>
@@ -175,29 +172,29 @@ const EditProfile = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Age */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">Age</label>
+                                <label className="block text-sm font-medium text-gray-300">Age</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <Calendar className="h-5 w-5 text-gray-400" />
+                                        <Calendar className="h-5 w-5 text-gray-500" />
                                     </div>
                                     <input
                                         type="number"
                                         name="age"
                                         value={formData.age}
                                         onChange={handleChange}
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                     />
                                 </div>
                             </div>
 
                             {/* Gender */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">Gender</label>
+                                <label className="block text-sm font-medium text-gray-300">Gender</label>
                                 <select
                                     name="gender"
                                     value={formData.gender}
                                     onChange={handleChange}
-                                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                 >
                                     <option value="" disabled>Select Gender</option>
                                     <option value="Male">Male</option>
@@ -208,34 +205,34 @@ const EditProfile = () => {
 
                             {/* Height */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">Height (cm)</label>
+                                <label className="block text-sm font-medium text-gray-300">Height (cm)</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <Ruler className="h-5 w-5 text-gray-400" />
+                                        <Ruler className="h-5 w-5 text-gray-500" />
                                     </div>
                                     <input
                                         type="number"
                                         name="height"
                                         value={formData.height}
                                         onChange={handleChange}
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                     />
                                 </div>
                             </div>
 
                             {/* Weight */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
+                                <label className="block text-sm font-medium text-gray-300">Weight (kg)</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <Weight className="h-5 w-5 text-gray-400" />
+                                        <Weight className="h-5 w-5 text-gray-500" />
                                     </div>
                                     <input
                                         type="number"
                                         name="weight"
                                         value={formData.weight}
                                         onChange={handleChange}
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                     />
                                 </div>
                             </div>
@@ -243,16 +240,16 @@ const EditProfile = () => {
 
                         {/* Goals */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Fitness Goal</label>
+                            <label className="block text-sm font-medium text-gray-300">Fitness Goal</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <Target className="h-5 w-5 text-gray-400" />
+                                    <Target className="h-5 w-5 text-gray-500" />
                                 </div>
                                 <select
                                     name="goals"
                                     value={formData.goals}
                                     onChange={handleChange}
-                                    className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="pl-10 w-full p-2 bg-gray-700/50 border border-gray-600 text-white rounded focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                 >
                                     <option value="" disabled>Select your goal</option>
                                     <option value="Gain Weight">Gain Weight</option>
@@ -264,11 +261,11 @@ const EditProfile = () => {
 
                         {/* Dietary Preferences */}
                         <div className="space-y-2">
-                            <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                <Salad className="h-5 w-5 text-green-500" />
+                            <label className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                                <Salad className="h-5 w-5 text-[#f0f]" />
                                 Dietary Preferences
                             </label>
-                            <div className="bg-gray-50 p-4 rounded border grid grid-cols-2 gap-4">
+                            <div className="bg-gray-700/50 p-4 rounded border border-gray-600 grid grid-cols-2 gap-4">
                                 {['Halal', 'Vegan', 'Vegetarian', 'Gluten-Free'].map((pref) => (
                                     <label key={pref} className="flex items-center mr-4">
                                         <input
@@ -277,20 +274,20 @@ const EditProfile = () => {
                                             value={pref}
                                             checked={formData.dietary_preferences.includes(pref)}
                                             onChange={handleCheckboxChange}
-                                            className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                            className="mr-2 h-4 w-4 rounded bg-gray-600 border-gray-500 text-[#0ff] focus:ring-[#0ff] focus:ring-offset-gray-800"
                                         />
-                                        <span className="text-gray-700">{pref}</span>
+                                        <span className="text-gray-300">{pref}</span>
                                     </label>
                                 ))}
                             </div>
                         </div>
 
-                        {message && <p className="text-green-500 font-medium">{message}</p>}
-                        {error && <p className="text-red-500 font-medium">{error}</p>}
+                        {message && <p className="text-green-400 font-medium">{message}</p>}
+                        {error && <p className="text-red-400 font-medium">{error}</p>}
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 flex items-center justify-center gap-2"
+                            className="w-full bg-gradient-to-r from-[#0ff] to-[#f0f] text-black font-bold px-6 py-3 rounded hover:opacity-90 flex items-center justify-center gap-2"
                         >
                             <Save className="w-5 h-5" />
                             Update Profile
