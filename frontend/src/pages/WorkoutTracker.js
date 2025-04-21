@@ -108,8 +108,8 @@ const WorkoutTracker = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="text-blue-500 text-xl animate-pulse">
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center">
+                <div className="text-[#0ff] text-xl animate-pulse">
                     Loading...
                 </div>
             </div>
@@ -117,36 +117,36 @@ const WorkoutTracker = () => {
     }
 
     return (
-        <div className="min-h-screen bg-black p-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 p-6">
             <div className="max-w-4xl mx-auto">
                 {/* Back to Dashboard Button */}
                 <button
                     onClick={() => navigate('/dashboard')}
-                    className="mb-6 flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+                    className="mb-6 flex items-center gap-2 px-4 py-2 bg-gray-800/70 text-white rounded backdrop-blur-sm border border-gray-700 hover:border-[#0ff]/50"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back to Dashboard
                 </button>
 
                 <h1 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
-                    <Dumbbell className="w-6 h-6 text-blue-500" />
+                    <Dumbbell className="w-6 h-6 text-[#0ff]" />
                     Workout Tracker
                 </h1>
                 
                 {/* New Workout Form */}
-                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <Plus className="w-5 h-5 text-blue-500" />
+                <div className="bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-md p-6 mb-6 border border-gray-700">
+                    <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white">
+                        <Plus className="w-5 h-5 text-[#0ff]" />
                         Log New Workout
                     </h2>
                     
                     {/* Plan indicator */}
                     {isUsingPlan && (
-                        <div className="mb-4 bg-purple-100 p-4 rounded-lg border border-purple-300">
-                            <h3 className="text-purple-800 font-semibold flex items-center gap-2">
+                        <div className="mb-4 bg-purple-900/50 p-4 rounded-lg border border-purple-500/50">
+                            <h3 className="text-purple-300 font-semibold flex items-center gap-2">
                                 <Clipboard className="w-4 h-4" />
                                 Following Plan: {newWorkout.planName}
                             </h3>
-                            <p className="text-sm text-purple-700 mt-1">
+                            <p className="text-sm text-purple-200 mt-1">
                                 Fill in the weights and reps for your workout
                             </p>
                         </div>
@@ -154,20 +154,20 @@ const WorkoutTracker = () => {
                     
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {newWorkout.exercises.map((exercise, exerciseIndex) => (
-                            <div key={exerciseIndex} className="p-4 border rounded-lg bg-gray-50">
+                            <div key={exerciseIndex} className="p-4 rounded-lg bg-gray-700/50 border border-gray-600">
                                 <input
                                     type="text"
                                     placeholder="Exercise Name"
                                     value={exercise.name}
                                     onChange={(e) => handleExerciseChange(exerciseIndex, 'name', e.target.value)}
-                                    className="mb-3 p-2 border rounded w-full"
+                                    className="mb-3 p-2 bg-gray-800/70 border border-gray-600 rounded w-full text-white focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                     readOnly={isUsingPlan}
                                 />
                                 
                                 <div className="space-y-2">
                                     {exercise.sets.map((set, setIndex) => (
                                         <div key={setIndex} className="flex gap-2">
-                                            <div className="w-8 flex items-center justify-center text-gray-500 font-semibold">
+                                            <div className="w-8 flex items-center justify-center text-gray-400 font-semibold">
                                                 {setIndex + 1}
                                             </div>
                                             <input
@@ -175,14 +175,14 @@ const WorkoutTracker = () => {
                                                 placeholder="Weight (kg)"
                                                 value={set.weight}
                                                 onChange={(e) => handleSetChange(exerciseIndex, setIndex, 'weight', e.target.value)}
-                                                className="p-2 border rounded flex-1"
+                                                className="p-2 bg-gray-800/70 border border-gray-600 rounded flex-1 text-white focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                             />
                                             <input
                                                 type="number"
                                                 placeholder="Reps"
                                                 value={set.reps}
                                                 onChange={(e) => handleSetChange(exerciseIndex, setIndex, 'reps', e.target.value)}
-                                                className="p-2 border rounded flex-1"
+                                                className="p-2 bg-gray-800/70 border border-gray-600 rounded flex-1 text-white focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                             />
                                         </div>
                                     ))}
@@ -191,7 +191,7 @@ const WorkoutTracker = () => {
                                 <button
                                     type="button"
                                     onClick={() => addSet(exerciseIndex)}
-                                    className="mt-3 px-4 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center gap-1 text-sm"
+                                    className="mt-3 px-4 py-1 bg-gray-600/70 text-gray-300 rounded hover:bg-gray-600 hover:border-[#0ff]/30 flex items-center gap-1 text-sm border border-gray-600"
                                 >
                                     <Plus className="w-4 h-4" /> Add Set
                                 </button>
@@ -203,34 +203,34 @@ const WorkoutTracker = () => {
                             <button
                                 type="button"
                                 onClick={addExercise}
-                                className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center gap-2"
+                                className="w-full px-4 py-2 bg-gray-700/70 border border-gray-600 hover:border-[#0ff]/50 text-white rounded backdrop-blur-sm hover:bg-gray-700 flex items-center justify-center gap-2"
                             >
-                                <Plus className="w-4 h-4" /> Add Exercise
+                                <Plus className="w-4 h-4 text-[#0ff]" /> Add Exercise
                             </button>
                         )}
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-                                    <Clock className="w-4 h-4 text-blue-500" /> Duration (minutes)
+                                <label className="block text-sm font-medium text-gray-300 mb-1 flex items-center gap-1">
+                                    <Clock className="w-4 h-4 text-[#0ff]" /> Duration (minutes)
                                 </label>
                                 <input
                                     type="number"
                                     placeholder="Duration"
                                     value={newWorkout.duration}
                                     onChange={(e) => setNewWorkout({...newWorkout, duration: e.target.value})}
-                                    className="p-2 border rounded w-full"
+                                    className="p-2 bg-gray-800/70 border border-gray-600 rounded w-full text-white focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                 />
                             </div>
                             
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-                                    <UserCircle className="w-4 h-4 text-blue-500" /> Mood
+                                <label className="block text-sm font-medium text-gray-300 mb-1 flex items-center gap-1">
+                                    <UserCircle className="w-4 h-4 text-[#0ff]" /> Mood
                                 </label>
                                 <select
                                     value={newWorkout.mood}
                                     onChange={(e) => setNewWorkout({...newWorkout, mood: e.target.value})}
-                                    className="p-2 border rounded w-full"
+                                    className="p-2 bg-gray-800/70 border border-gray-600 rounded w-full text-white focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                                 >
                                     <option value="">Select Mood</option>
                                     <option value="Energetic">Energetic</option>
@@ -242,22 +242,22 @@ const WorkoutTracker = () => {
                         </div>
                         
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-300 mb-1">
                                 Workout Notes
                             </label>
                             <textarea
                                 placeholder="How did it go? Any achievements or challenges?"
                                 value={newWorkout.notes}
                                 onChange={(e) => setNewWorkout({...newWorkout, notes: e.target.value})}
-                                className="p-2 border rounded w-full h-24 resize-none"
+                                className="p-2 bg-gray-800/70 border border-gray-600 rounded w-full h-24 resize-none text-white focus:ring-2 focus:ring-[#0ff] focus:border-transparent"
                             />
                         </div>
                         
-                        {error && <div className="text-red-500">{error}</div>}
+                        {error && <div className="text-red-400">{error}</div>}
                         
                         <button
                             type="submit"
-                            className="w-full bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 flex items-center justify-center gap-2"
+                            className="w-full bg-gradient-to-r from-[#0ff] to-[#f0f] text-black font-bold px-6 py-3 rounded hover:opacity-90 flex items-center justify-center gap-2"
                         >
                             <Save className="w-5 h-5" /> Log Workout
                         </button>
@@ -265,17 +265,17 @@ const WorkoutTracker = () => {
                 </div>
                 
                 {/* Workout History */}
-                <div className="bg-white rounded-lg shadow-md p-6">
-                    <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-blue-500" />
+                <div className="bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-md p-6 border border-gray-700">
+                    <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-white">
+                        <Calendar className="w-5 h-5 text-[#0ff]" />
                         Workout History
                     </h2>
                     
                     {workouts.length > 0 ? (
                         <div className="space-y-6">
                             {workouts.map((workout, index) => (
-                                <div key={index} className="p-4 border rounded-lg bg-gray-50">
-                                    <div className="font-semibold text-lg text-blue-700">
+                                <div key={index} className="p-4 rounded-lg bg-gray-700/50 border border-gray-600">
+                                    <div className="font-semibold text-lg text-[#0ff]">
                                         {new Date(workout.date).toLocaleDateString(undefined, {
                                             weekday: 'long',
                                             year: 'numeric',
@@ -286,7 +286,7 @@ const WorkoutTracker = () => {
                                     
                                     {/* Show plan name if workout used a plan */}
                                     {workout.plan_used && (
-                                        <div className="mt-1 text-purple-600 font-medium flex items-center gap-1">
+                                        <div className="mt-1 text-[#f0f] font-medium flex items-center gap-1">
                                             <Clipboard className="w-4 h-4" />
                                             Plan: {workout.plan_used}
                                         </div>
@@ -294,11 +294,11 @@ const WorkoutTracker = () => {
                                     
                                     <div className="mt-3 space-y-3">
                                         {workout.exercises.map((exercise, exerciseIndex) => (
-                                            <div key={exerciseIndex} className="bg-white p-3 border rounded">
-                                                <div className="font-medium text-gray-800">{exercise.name}</div>
+                                            <div key={exerciseIndex} className="bg-gray-600/50 p-3 border border-gray-500 rounded">
+                                                <div className="font-medium text-white">{exercise.name}</div>
                                                 <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                                                     {exercise.sets.map((set, setIndex) => (
-                                                        <div key={setIndex} className="text-sm bg-gray-100 p-2 rounded">
+                                                        <div key={setIndex} className="text-sm bg-gray-700/70 p-2 rounded text-gray-300 border border-gray-600">
                                                             Set {setIndex + 1}: {set.weight || '-'}kg × {set.reps || '-'} reps
                                                         </div>
                                                     ))}
@@ -307,27 +307,27 @@ const WorkoutTracker = () => {
                                         ))}
                                     </div>
                                     
-                                    <div className="mt-3 flex flex-wrap gap-4 text-sm text-gray-600">
+                                    <div className="mt-3 flex flex-wrap gap-4 text-sm text-gray-300">
                                         <div className="flex items-center gap-1">
-                                            <Clock className="w-4 h-4 text-blue-500" />
+                                            <Clock className="w-4 h-4 text-[#0ff]" />
                                             Duration: {workout.duration} minutes
                                         </div>
                                         <div className="flex items-center gap-1">
-                                            <UserCircle className="w-4 h-4 text-blue-500" />
+                                            <UserCircle className="w-4 h-4 text-[#0ff]" />
                                             Mood: {workout.mood || 'Not specified'}
                                         </div>
                                     </div>
                                     
                                     {workout.notes && (
-                                        <div className="mt-2 bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-                                            <div className="text-sm text-gray-700">{workout.notes}</div>
+                                        <div className="mt-2 bg-gray-700/70 p-3 rounded-lg border border-gray-600">
+                                            <div className="text-sm text-gray-300">{workout.notes}</div>
                                         </div>
                                     )}
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-8 text-gray-500">
+                        <div className="text-center py-8 text-gray-400">
                             No workout history found. Start tracking today!
                         </div>
                     )}
