@@ -37,7 +37,7 @@ const LandingPage = () => {
         </div>
       </header>
 
-      {/* App Preview */}
+      {/* App Preview - may use this if i ever want to update the app priview or use this section as a promo page
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#0ff]/5 to-transparent"></div>
         <div className="container mx-auto px-4">
@@ -56,6 +56,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+      */}
 
       {/* Features Section */}
       <section className="py-20 container mx-auto px-4">

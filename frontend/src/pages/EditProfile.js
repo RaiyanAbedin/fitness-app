@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Mail, Calendar, Ruler, Weight, Target, Salad, Save } from 'lucide-react';
 
+/*************  ✨ Windsurf Command 🌟  *************/
+// Edit profile component with user data management and form handling
 const EditProfile = () => {
     const [userData, setUserData] = useState(null);
     const [formData, setFormData] = useState({
@@ -113,6 +115,7 @@ const EditProfile = () => {
             </div>
         );
     }
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 p-6">

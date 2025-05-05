@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Disclosure, Transition } from '@headlessui/react';
 import { ChevronUp, AlertTriangle } from 'lucide-react';
 
-import { 
+import { //lucide icons to use in dashboard
     ArrowLeft,
     Target,
     Activity,
@@ -14,7 +14,7 @@ import {
     Plus
 } from 'lucide-react';
 
-const GenerateWorkout = () => {
+const GenerateWorkout = () => { // GenerateWorkout component
     const [goal, setGoal] = useState('');
     const [experienceLevel, setExperienceLevel] = useState('');
     const [timeAvailable, setTimeAvailable] = useState('');
@@ -54,7 +54,7 @@ const GenerateWorkout = () => {
         }
     };
 
-    const fetchSavedWorkouts = async () => {
+    const fetchSavedWorkouts = async () => { //fetch saved workouts
         try {
             const userId = localStorage.getItem('user_id');
             if (!userId) {

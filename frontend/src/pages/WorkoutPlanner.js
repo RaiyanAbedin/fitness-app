@@ -32,7 +32,7 @@ function classNames(...classes) {
 
 const WorkoutPlanner = () => {
     const [workoutBank, setWorkoutBank] = useState([]); // Left side: Saved workouts
-    const [customPlan, setCustomPlan] = useState([]);   // Right side: Drop Zone (Now starts empty)
+    const [customPlan, setCustomPlan] = useState([]);   // Right side: Drop Zone for custom plan
     const [savedPlans, setSavedPlans] = useState([]);   // Stores all saved plans
     const [selectedPlan, setSelectedPlan] = useState(""); // Tracks selected plan
     const [editMode, setEditMode] = useState(false);    // Track if we're editing an existing plan

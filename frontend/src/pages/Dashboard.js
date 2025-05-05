@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import WorkoutDisplay from './WorkoutDisplay';
 
-import { 
+import { //import lucide icons to use in dashboard
     Weight, 
     Target, 
     Apple, 
@@ -20,8 +20,10 @@ import {
     Plus,
     BookOpen,
     ShoppingBag,
-    Heart
+    Heart,
+    BarChart
 } from 'lucide-react';
+
 
 const Dashboard = () => {
     const [userData, setUserData] = useState(null);
@@ -58,7 +60,7 @@ const Dashboard = () => {
             }
         };
 
-        const fetchTip = async () => {
+        const fetchTip = async () => { //fetch motivational tip
             try {
                 const response = await axios.get('http://127.0.0.1:5000/api/tip');
                 setTip(response.data.tip);
@@ -66,8 +68,9 @@ const Dashboard = () => {
                 console.error('Failed to fetch the motivational tip.');
             }
         };
+        
 
-        const fetchAIGeneratedWorkouts = async () => {
+        const fetchAIGeneratedWorkouts = async () => { //fetch AI-generated workouts
             const userId = localStorage.getItem('user_id');
             try {
                 const response = await axios.get(`http://127.0.0.1:5000/api/workout-history/${userId}`);
@@ -226,6 +229,49 @@ const Dashboard = () => {
                     </div>
                 </div>
 
+                
+                <div className="bg-gray-800/70 backdrop-blur-sm p-4 rounded-xl border border-gray-700 hover:border-[#0ff]/50 transition-all mb-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="bg-[#f0f] p-2 rounded-full text-black">
+                            <Activity className="w-5 h-5" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-300">BMI</h3>
+
+                    </div>
+                    <div>
+                        {(() => {
+                            // Calculate BMI
+                            const heightInMeters = userData.height / 100;
+                            const bmi = (userData.weight / (heightInMeters * heightInMeters)).toFixed(1);
+                            
+                            //  BMI category
+                            let category, categoryColor;
+                            if (bmi < 18.5) {
+                                category = "Underweight";
+                                categoryColor = "text-blue-400";
+                            } else if (bmi >= 18.5 && bmi < 25) {
+                                category = "Normal weight";
+                                categoryColor = "text-green-400";
+                            } else if (bmi >= 25 && bmi < 30) {
+                                category = "Overweight";
+                                categoryColor = "text-yellow-400";
+                            } else {
+                                category = "Obese";
+                                categoryColor = "text-red-400";
+                            }
+                            
+                            return (
+                                <>
+                                    <p className="text-2xl font-bold text-white">{bmi}</p>
+                                    <p className={`text-sm ${categoryColor}`}>{category}</p>
+                                </>
+                            );
+                        })()}
+                    </div>
+                </div>
+
+
+
                 {/* Motivational Tip Section */}
                 <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-2xl border border-gray-800 mb-6 relative overflow-hidden">
                     <div className="absolute -bottom-4 -right-4 h-32 w-32 bg-[#0ff] opacity-10 blur-3xl rounded-full"></div>
@@ -322,6 +368,25 @@ const Dashboard = () => {
                             <span>Shopping List</span>
                         </button>
 
+                        <button
+                            onClick={() => navigate('/analytics')}
+                            className="bg-gray-800/60 text-white px-6 py-4 rounded-xl hover:bg-gray-700 transition duration-200 flex items-center gap-3 border border-gray-700 hover:border-[#0ff]"
+                        >
+                            <BarChart className="w-5 h-5 text-[#0ff]" />  
+                            <span>View Analytics</span>
+                        </button>
+
+                        
+                        <button
+                            onClick={() => navigate('/workout-insights')}
+                            className="bg-gray-800/60 text-white px-6 py-4 rounded-xl hover:bg-gray-700 transition duration-200 flex items-center gap-3 border border-gray-700 hover:border-[#0ff]"
+                        >
+                            <ArrowUp className="w-5 h-5 text-[#0ff]" />
+                            <span>Workout Insights</span>
+                        </button>
+                        
+
+                        
                     </div>
                 </div>
             </div>

@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_cors import CORS
 
-from generate_workout import generate_workout  # Import your OpenAI function
+from generate_workout import generate_workout  
 
 from generate_meal import generate_meal 
 
@@ -107,19 +107,15 @@ def update_user(id):
     
 import random
 
-# List of fitness tips or motivational quotes , currently hardcoded but will change depending on nature of app/theme
+# List of fitness tips or motivational quotes , currently hardcoded but will change depending on nature of app/theme - future plan is to make it personal
 TIPS_AND_QUOTES = [
-    "Level Up Your Fitness: Consistency is the only stat that truly matters.",
-    "Become the Hunter: Hunt down your fitness goals with relentless determination.",
+    "Habit Builder: Consistency is your most reliable power-up. Track your progress daily!",
+    "Nutrient Power: Fuel your body with the right nutrients, your ultimate energy source for growth.",
     "Embrace Imperfection: Even the lowest of efforts is a step in the right direction.",
-    "Every Rep is a Quest: Even a short workout strengthens your resolve." ,
-    "Fuel Your Ascension: Nourishment is the foundation of your power.",
-    "Ignore the Rankings: Focus on your own journey, not others.",
-    "Rest and Recover: Recharge your mana for the next challenge.",
-    "Breakthrough Your Limits: Every workout is an opportunity to surpass your previous self.",
-    "Master Your Domain: Conquer your body and mind, just as you would a dungeon.",
-    "Evolve or Perish: Continuously adapt and improve to reach your peak performance."
-]
+    "Fitness Focus: Every workout, no matter how small, contributes to your overall strength stat.",
+    "Nutrition Navigator: Learn to read your body's signals and fuel it with what it truly needs.",
+    "Track Your Wins: Keep a record of your achievements to stay motivated and see how far you've come.",
+    "Hydration Habit: Make drinking water a consistent and non-negotiable part of your daily routine."]
 
 # Route to fetch a random tip or motivational quote
 @app.route('/api/tip', methods=['GET'])
@@ -128,7 +124,7 @@ def get_tip():
     return jsonify({"tip": tip})
 
 
-
+# Route to get workouts by goal
 @app.route('/api/workouts/<goal>', methods=['GET'])
 def get_workouts_by_goal(goal):
     print(f"Received goal: {goal}")  # Add this for debugging
@@ -142,7 +138,7 @@ def get_workouts_by_goal(goal):
 
 
 
-# Fix the indentation of these routes in app.py
+
 #open ai integration for ai coaching advice/workouts
 
 @app.route('/api/generate-workout', methods=['POST'])
@@ -152,14 +148,14 @@ def api_generate_workout():
     goal = data.get('goal')
     experience_level = data.get('experience_level')
     time_available = data.get('time_available')
+    #parameters to be passed to generate_workout
 
-    # Call OpenAI's workout generator
     workout = generate_workout(goal, experience_level, time_available)
 
     if isinstance(workout, dict) and 'error' in workout:
         return jsonify({"error": workout["error"]}), 400
 
-    # Save the workout to workout_history collection
+    # save the workout to workout_history collection
     workout_entry = {
         "user_id": user_id,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -217,7 +213,6 @@ def test_openai_api():
 
 
 #workout section::::::::::::::::::::::
-# Add these new routes to your app.py
 
 from datetime import datetime
 
@@ -451,13 +446,13 @@ def api_generate_meal():
     user = db.users.find_one({"_id": ObjectId(user_id)}, {"dietary_preferences": 1})
     preferences = user.get("dietary_preferences", []) if user else []
     
-    # Call the meal generator
+
     meal = generate_meal(meal_type, preferences, meal_request, calories) 
 
-     # Add these debugging print statements here
+     # Debugging statements for now
     print(f"Meal request: {meal_request}")
     print(f"Preferences: {preferences}")
-    print(f"Generated meal (preview): {meal[:100]}...")  # Print first 100 chars
+    print(f"Generated meal (preview): {meal[:100]}...") 
     
     if isinstance(meal, dict) and 'error' in meal:
         return jsonify({"error": meal["error"]}), 400
@@ -553,6 +548,7 @@ def get_shopping_list(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Add an item to the shopping list
 @app.route('/api/shopping-list', methods=['POST'])
 def add_shopping_item():
     """Add an item to the shopping list"""
@@ -583,7 +579,7 @@ def add_shopping_item():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/shopping-list/<item_id>', methods=['PUT'])
+@app.route('/api/shopping-list/<item_id>', methods=['PUT']) #update shopping list
 def update_shopping_item(item_id):
     """Update a shopping list item (e.g., mark as purchased)"""
     data = request.json
@@ -599,7 +595,7 @@ def update_shopping_item(item_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/shopping-list/<item_id>', methods=['DELETE'])
+@app.route('/api/shopping-list/<item_id>', methods=['DELETE']) #delete shopping list
 def delete_shopping_item(item_id):
     """Delete an item from the shopping list"""
     try:
@@ -610,7 +606,7 @@ def delete_shopping_item(item_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/shopping-list/from-recipe', methods=['POST'])
+@app.route('/api/shopping-list/from-recipe', methods=['POST']) #add recipe to shopping list
 def add_recipe_to_shopping_list():
     """Add all ingredients from a recipe to the shopping list"""
     data = request.json
@@ -662,6 +658,66 @@ def add_recipe_to_shopping_list():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Import the analysis function
+from workout_analytics import analyze_logged_workouts
+@app.route('/api/workout-insights/<user_id>', methods=['GET'])
+def get_workout_insights(user_id):
+    # Check if we should generate new insights
+    generate_new = request.args.get('generate', 'false').lower() == 'true'
+    
+    try:
+        if not generate_new:
+            # Try to fetch the most recent saved insights first
+            saved_insights = db.workout_insights.find_one(
+                {"user_id": user_id},
+                sort=[("generation_date", -1)]
+            )
+            
+            if saved_insights:
+                # Convert ObjectId to string for JSON serialization
+                if "_id" in saved_insights:
+                    saved_insights["_id"] = str(saved_insights["_id"])
+                
+                return jsonify({
+                    "insights": saved_insights["insights"],
+                    "generated_on": saved_insights["generation_date"],
+                    "is_new": False
+                }), 200
+        
+        # Either we need to generate new insights or there are no saved insights
+        workout_logs = list(db.workout_logs.find(
+            {"user_id": user_id}
+        ).sort("date", -1))
+        
+        if not workout_logs or len(workout_logs) < 3:
+            return jsonify({
+                "message": "Need at least 3 logged workouts for meaningful analysis."
+            }), 200
+        
+        # Generate new insights using the imported function
+        new_insights = analyze_logged_workouts(workout_logs)
+        
+        # Save the new insights
+        generation_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Save to database
+        insights_entry = {
+            "user_id": user_id,
+            "insights": new_insights,
+            "generation_date": generation_date
+        }
+        
+        db.workout_insights.insert_one(insights_entry)
+        
+        return jsonify({
+            "insights": new_insights,
+            "generated_on": generation_date,
+            "is_new": True
+        }), 200
+        
+    except Exception as e:
+        print(f"Error with workout insights: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

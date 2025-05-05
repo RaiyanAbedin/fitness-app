@@ -11,6 +11,9 @@ import WorkoutPlanner from './pages/WorkoutPlanner';
 import GenerateMeal from './pages/GenerateMeal';
 import ShoppingList from './pages/ShoppingList';
 import SavedRecipes from './pages/SavedRecipes';
+import Analytics from './pages/Analytics';
+import PrivacyConsentForm from './pages/PrivacyConsentForm';
+import WorkoutInsights from './pages/WorkoutInsights';
 
 const App = () => {
     return (
@@ -47,6 +50,12 @@ const App = () => {
 
             {/* Route for the saved recipes page */}
             <Route path="/saved-recipes" element={<SavedRecipes />} />
+
+            <Route path="/analytics" element={<Analytics />} />
+
+            <Route path="/privacy" element={<PrivacyConsentForm />} />
+
+            <Route path="/workout-insights" element={<WorkoutInsights />} />
 
         </Routes>
     );

@@ -30,7 +30,7 @@ def clean_json(json_string):
     return cleaned
 
 def generate_meal(meal_type, preferences, meal_request=None, calories=None):
-    # Get API key from environment variable
+    # Get API key from env
     openai.api_key = os.getenv('OPENAI_API_KEY')
     
     # Create calorie restriction text if provided
